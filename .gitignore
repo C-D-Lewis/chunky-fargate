@@ -1,0 +1,10 @@
+*/.DS_Store
+cache
+lib
+resources
+scenes
+versions
+chunky.json
+chunky-launcher.json
+world
+

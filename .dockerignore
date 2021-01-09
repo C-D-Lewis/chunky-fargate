@@ -1,0 +1,5 @@
+cache
+lib
+resources
+versions
+./*.json
