@@ -2,6 +2,8 @@
 
 Dockerized image + pipeline for Chunky Minecraft rendering, with S3 as a store.
 
+TODO: Terraform/script to start as ECS Fargate tasks.
+
 ## Setup
 
 1. Download `ChunkyLauncher.jar` from the
