@@ -29,6 +29,8 @@ aws ecs register-task-definition \
   --family $FAMILY \
   --container-definitions "[{ 
     \"image\": \"$TARGET\",
+    \"cpu\": $CPU,
+    \"memory\": $MEMORY,
     \"logConfiguration\": { 
       \"logDriver\": \"awslogs\",
       \"options\": { 
@@ -68,6 +70,6 @@ aws ecs run-task \
     \"awsvpcConfiguration\": {
       \"subnets\": [\"$SUBNET_ID\"],
       \"securityGroups\": [\"$SECURITY_GROUP_ID\"],
-      \"assignPublicIp\": \"DISABLED\"
+      \"assignPublicIp\": \"ENABLED\"
     }
   }"
