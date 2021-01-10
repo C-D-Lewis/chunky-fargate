@@ -19,6 +19,10 @@ TARGET="$ECR_URI:latest"
 RES=$(aws sts get-caller-identity)
 AWS_ACCOUNT_ID="$(echo $RES | jq -r '.Account')"
 
+# Get role ARN
+RES=$(aws iam get-role --role-name "$PROJECT_NAME-task-execution-role")
+ROLE_ARN=$(echo $RES | jq -r '.Role.Arn')
+
 # Create task definition
 echo "Creating task definition..."
 aws ecs register-task-definition \
@@ -36,12 +40,10 @@ aws ecs register-task-definition \
     \"name\": \"$TASK_DEF_NAME\"
   }]" \
   --cpu $CPU \
-  --execution-role-arn "arn:aws:iam::$AWS_ACCOUNT_ID:role/ecsTaskExecutionRole" \
+  --execution-role-arn $ROLE_ARN \
   --memory $MEMORY \
   --network-mode awsvpc \
   --requires-compatibilities "FARGATE"
-
-echo "Created task definition"
 
 # Get security group
 RES=$(aws ec2 describe-security-groups --filters "Name=tag:Project,Values=$PROJECT_NAME")
