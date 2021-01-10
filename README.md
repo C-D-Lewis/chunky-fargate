@@ -65,7 +65,7 @@ First, deploy the basic infrastructure:
 cd terraform
 
 # Specity required variables
-# Output S3 bucket (same as OUTPUT_BUCKET below)
+# Output S3 bucket (same as OUTPUT_BUCKET below, but just the bucket name)
 export TF_VAR_output_bucket=...
 
 terraform init
@@ -87,6 +87,9 @@ export AWS_SECRET_ACCESS_KEY=...
 ```
 
 ## Run a remote render
+
+> If you haven't already, add a statement to the Bucket Policy of the output
+> bucket allowing the Task Role access.
 
 Create a new Task Definition in the created ECS service, which will run the
 Docker container:

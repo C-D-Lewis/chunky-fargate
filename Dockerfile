@@ -26,7 +26,6 @@ RUN java -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar -download-mc $MC_VERSION
 COPY pipeline /chunky/pipeline
 
 # Scenes that will be used
-RUN rm -rf scenes/**/*.dump*
 COPY scenes /chunky/scenes
 
 ENTRYPOINT ["./pipeline/fetch-render-upload.sh"]

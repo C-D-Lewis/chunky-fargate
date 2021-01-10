@@ -52,7 +52,7 @@ resource "aws_iam_role_policy" "ecs_task_role_policy" {
       "Action": [
         "s3:GetObject",
         "s3:PutObject",
-        "s3:ListObjects"
+        "s3:ListBucket"
       ],
       "Resource": ["arn:aws:s3:::${var.output_bucket}/*"]
     }
