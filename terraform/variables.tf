@@ -15,3 +15,8 @@ variable "vpc_id" {
   description = "VPC to deploy into"
   default     = "vpc-c3b70bb9"
 }
+
+variable "output_bucket" {
+  type        = string
+  description = "Output S3 bucket to save renders to"
+}

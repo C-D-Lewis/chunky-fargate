@@ -64,6 +64,10 @@ First, deploy the basic infrastructure:
 ```shell
 cd terraform
 
+# Specity required variables
+# Output S3 bucket (same as OUTPUT_BUCKET below)
+export TF_VAR_output_bucket=...
+
 terraform init
 terraform apply
 ```
