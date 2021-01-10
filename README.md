@@ -9,6 +9,12 @@ S3 as an output render PNG store.
 * [Set up Fargate](#set-up-fargate)
 * [Run a remote render](#run-a-remote-render)
 
+### TODO
+
+- Trigger a task from an S3 world files upload.
+- Parallelize multiple scenes.
+- Notification when a render task completes.
+
 ## Setup
 
 1. Download `ChunkyLauncher.jar` from the
