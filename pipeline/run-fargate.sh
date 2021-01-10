@@ -28,18 +28,24 @@ echo "Creating task definition..."
 aws ecs register-task-definition \
   --family $FAMILY \
   --container-definitions "[{ 
+    \"name\": \"$TASK_DEF_NAME\",
     \"image\": \"$TARGET\",
     \"cpu\": $CPU,
     \"memory\": $MEMORY,
+    \"environment\": [
+      { \"name\": \"WORLD_URL\", \"value\": \"$WORLD_URL\" },
+      { \"name\": \"SCENE_NAME\", \"value\": \"$SCENE_NAME\" },
+      { \"name\": \"TARGET_SPP\", \"value\": \"$TARGET_SPP\" },
+      { \"name\": \"OUTPUT_BUCKET\", \"value\": \"$OUTPUT_BUCKET\" }
+    ], 
     \"logConfiguration\": { 
       \"logDriver\": \"awslogs\",
       \"options\": { 
-        \"awslogs-group\" : \"/ecs/$PROJECT_NAME-logs\",
+        \"awslogs-group\" : \"/aws/ecs/$PROJECT_NAME-logs\",
         \"awslogs-region\": \"us-east-1\",
         \"awslogs-stream-prefix\": \"ecs\"
       }
-    },
-    \"name\": \"$TASK_DEF_NAME\"
+    }
   }]" \
   --cpu $CPU \
   --execution-role-arn $ROLE_ARN \
