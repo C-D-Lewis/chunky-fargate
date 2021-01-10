@@ -7,10 +7,10 @@ set -eu
 
 WORLD_DIR="$(pwd)/world"
 
-./fetch-world.sh $WORLD_URL
+./pipeline/fetch-world.sh $WORLD_URL
 
-./render-scene.sh $WORLD_DIR $SCENE_NAME $TARGET_SPP --restart
+./pipeline/render-scene.sh $WORLD_DIR $SCENE_NAME $TARGET_SPP --restart
 
-./upload-snapshot.sh
+./pipeline/upload-snapshot.sh
 
 rm -rf $WORLD_DIR

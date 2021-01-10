@@ -2,6 +2,9 @@ FROM ubuntu:18.04
 
 WORKDIR /chunky
 
+# Environment variables
+ENV MC_VERSION="1.16.4"
+
 # For tzdata dependency
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/London
@@ -11,18 +14,16 @@ RUN apt-get update && apt-get install -y default-jdk libopenjfx-java libcontrols
 
 # Chunky files
 COPY ChunkyLauncher.jar /chunky/ChunkyLauncher.jar
-COPY pipeline /chunky/pipeline
-
-# Scenes that will be used
-COPY scenes /chunky/scenes
-
-# Environment variables
-ENV MC_VERSION="1.16.4"
 
 # Initialize Chunky and Minecraft textures
 RUN cd /chunky
 RUN java -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar --update
 RUN java -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar -download-mc $MC_VERSION
 
-# docker run -e WORLD_URL -e SCENE_NAME -e TARGET_SPP -e BUCKET -e AWS_DEFAULT_REGION -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY chunky-fargate
-ENTRYPOINT ["./pipeline/get-render-upload.sh"]
+# Pipeline
+COPY pipeline /chunky/pipeline
+
+# Scenes that will be used
+COPY scenes /chunky/scenes
+
+ENTRYPOINT ["./pipeline/fetch-render-upload.sh"]

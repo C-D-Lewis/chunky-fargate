@@ -30,6 +30,9 @@ the `--restart` option.
 
 ## Run in Docker
 
+The Docker image is used to fetch a world, render a scene, and upload the output
+PNG snapshot to an S3 bucket.
+
 Build the image:
 
 ```shell
@@ -37,7 +40,7 @@ docker build -t chunky-fargate .
 ```
 
 Then run, supplying all required parameters. This will pull the world zip from
-`$WORLD_URL` and render scene `$SCENE_NAME` and use the AWS credentials
+`$WORLD_URL` and render scene `$SCENE_NAME`, using the AWS credentials
 specified to push the output render PNG snapshot to `$BUCKET/$SCENE_NAME/$DATE`:
 
 ```shell
