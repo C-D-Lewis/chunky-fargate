@@ -24,11 +24,9 @@ TODO: Terraform/script to start as ECS Fargate tasks.
     ./render-scene.sh $worldDir $sceneName $targetSpp
     ```
 
-Optionally, restart the render from 0 SPP, and update the world files:
+Optionally, restart the render from 0 SPP, and update the world files by adding
+the `--restart` option.
 
-```shell
-./render-scene.sh $worldDir $sceneName $targetSpp --restart
-```
 
 ## Run in Docker
 
