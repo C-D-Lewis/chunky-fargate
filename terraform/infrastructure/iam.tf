@@ -26,15 +26,15 @@ resource "aws_iam_role" "ecs_task_role" {
 {
  "Version": "2012-10-17",
  "Statement": [
-   {
-     "Action": "sts:AssumeRole",
-     "Principal": {
-       "Service": "ecs-tasks.amazonaws.com"
-     },
-     "Effect": "Allow",
-     "Sid": ""
-   }
- ]
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
 }
 EOF
 }
@@ -47,7 +47,7 @@ resource "aws_iam_role_policy" "ecs_task_role_policy" {
 {
  "Version": "2012-10-17",
  "Statement": [
-   {
+    {
       "Effect": "Allow",
       "Action": [
         "s3:GetObject",
@@ -55,8 +55,8 @@ resource "aws_iam_role_policy" "ecs_task_role_policy" {
         "s3:ListObjects"
       ],
       "Resource": ["arn:aws:s3:::${var.output_bucket}/*"]
-  }
- ]
+    }
+  ]
 }
 EOF  
 }
