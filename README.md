@@ -55,29 +55,48 @@ docker run \
   chunky-fargate
 ```
 
-## Run on Fargate
+## Set up Fargate
 
 The Docker container can be used to run a render job remotely on AWS Fargate.
 
 First, deploy the basic infrastructure:
 
-> You may need to select a new S3 bucket in `terraform/main.tf`.
+> You may need to select a new backend S3 bucket in `terraform/main.tf`.
 
-```
+```shell
 cd terraform
 
 terraform init
 terraform apply
 ```
 
-Next, create a new Task Definition in the created ECS service, which will run
-the Docker container:
+Next, push the most recently built image (with up to date scenes) to ECR:
 
+> The first push with the dependency layer will take a while, but subsequent
+> updates to the image should not.
+
+```shell
+# AWS credentials
+export AWS_DEFAULT_REGION=us-east-1
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
+
+./pipeline/push-image.sh
 ```
-# Set render variables
+
+## Run a remote render
+
+Create a new Task Definition in the created ECS service, which will run the
+Docker container:
+
+```shell
+# URL where world files zip can be found
 export WORLD_URL=...
+# Name of scene to render
 export SCENE_NAME=...
+# Target samples per pixel
 export TARGET_SPP=...
+# Bucket where output PNG can be saved
 export OUTPUT_BUCKET=...
 
 # Create the Fargate task

@@ -10,7 +10,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/London
 
 # Dependencies
-RUN apt-get update && apt-get install -y default-jdk libopenjfx-java libcontrolsfx-java jq wget unzip awscli
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  default-jdk libopenjfx-java libcontrolsfx-java jq wget unzip awscli \
+  && rm -rf /var/lib/apt/lists/*
 
 # Chunky files
 COPY ChunkyLauncher.jar /chunky/ChunkyLauncher.jar
@@ -24,6 +26,7 @@ RUN java -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar -download-mc $MC_VERSION
 COPY pipeline /chunky/pipeline
 
 # Scenes that will be used
+RUN rm -rf scenes/**/*.dump*
 COPY scenes /chunky/scenes
 
 ENTRYPOINT ["./pipeline/fetch-render-upload.sh"]

@@ -3,3 +3,4 @@ lib
 resources
 versions
 ./*.json
+terraform
