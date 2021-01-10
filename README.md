@@ -41,16 +41,47 @@ docker build -t chunky-fargate .
 
 Then run, supplying all required parameters. This will pull the world zip from
 `$WORLD_URL` and render scene `$SCENE_NAME`, using the AWS credentials
-specified to push the output render PNG snapshot to `$BUCKET/$SCENE_NAME/$DATE`:
+specified to push the output render PNG snapshot to `$OUTPUT_BUCKET/$SCENE_NAME/$DATE`:
 
 ```shell
 docker run \
   -e WORLD_URL \
   -e SCENE_NAME \
   -e TARGET_SPP \
-  -e BUCKET \
+  -e OUTPUT_BUCKET \
   -e AWS_DEFAULT_REGION \
   -e AWS_ACCESS_KEY_ID \
   -e AWS_SECRET_ACCESS_KEY \
   chunky-fargate
 ```
+
+## Run on Fargate
+
+The Docker container can be used to run a render job remotely on AWS Fargate.
+
+First, deploy the basic infrastructure:
+
+> You may need to select a new S3 bucket in `terraform/main.tf`.
+
+```
+cd terraform
+
+terraform init
+terraform apply
+```
+
+Next, create a new Task Definition in the created ECS service, which will run
+the Docker container:
+
+```
+# Set render variables
+export WORLD_URL=...
+export SCENE_NAME=...
+export TARGET_SPP=...
+export OUTPUT_BUCKET=...
+
+# Create the Fargate task
+./pipeline/run-fargate.sh
+```
+
+The output PNG will be available in `$OUTPUT_BUCKET` as per a normal Docker run.
