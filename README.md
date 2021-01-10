@@ -28,7 +28,7 @@ sudo apt-get install default-jdk libopenjfx-java libcontrolsfx-java jq
 Render the scene to a target SPP:
 
 ```shell
-./render-scene.sh $worldDir $sceneName $targetSpp
+./pipeline/render-scene.sh $worldDir $sceneName $targetSpp
 ```
 
 Optionally, restart the render from 0 SPP, and update the world files by adding
@@ -111,7 +111,7 @@ If you haven't already, add a statement to the Bucket Policy of the output
 bucket allowing the Task Role access, similar to the following:
 
 ```
- {
+{
   "Sid": "Stmt1610292864520",
   "Effect": "Allow",
   "Principal": {
