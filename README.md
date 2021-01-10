@@ -88,8 +88,27 @@ export AWS_SECRET_ACCESS_KEY=...
 
 ## Run a remote render
 
-> If you haven't already, add a statement to the Bucket Policy of the output
-> bucket allowing the Task Role access.
+If you haven't already, add a statement to the Bucket Policy of the output
+bucket allowing the Task Role access, similar to the following:
+
+```
+ {
+  "Sid": "Stmt1610292864520",
+  "Effect": "Allow",
+  "Principal": {
+    "AWS": "arn:aws:iam::617929423658:role/chunky-fargate-task-role"
+  },
+  "Action": [
+    "s3:GetObject",
+    "s3:PutObject",
+    "s3:ListBucket"
+  ],
+  "Resource": [
+    "arn:aws:s3:::$OUTPUT_BUCKET/*",
+    "arn:aws:s3:::$OUTPUT_BUCKET"
+  ]
+}
+```
 
 Create a new Task Definition in the created ECS service, which will run the
 Docker container:
