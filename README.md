@@ -159,3 +159,14 @@ export OUTPUT_BUCKET=...
 ```
 
 The output PNG will be available in `$OUTPUT_BUCKET` as per a normal Docker run.
+
+If you add or change a scene in `scenes/`, don't forget to build the image, and
+push an update to ECR:
+
+```shell
+cp /path/to/new/scene ./scenes
+
+docker built -t chunky-fargate .
+
+./pipeline/push-image.sh
+```
