@@ -110,8 +110,16 @@ bucket allowing the Task Role access, similar to the following:
 }
 ```
 
-Create a new Task Definition in the created ECS service, which will run the
-Docker container:
+Create a new Task Definition in the created ECS service:
+
+> This need only be done if adjusting the task/container setup, not each task
+> run.
+
+```shell
+./pipeline/create-task-definition.sh
+```
+
+Finally, run a Fargate task to perform the render of the chosen world and scene:
 
 ```shell
 # URL where world files zip can be found
