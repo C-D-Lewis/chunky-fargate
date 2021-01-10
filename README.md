@@ -1,6 +1,13 @@
 # chunky-fargate
 
-Dockerized image + pipeline for Chunky Minecraft rendering, with S3 as a store.
+Dockerized image + pipeline for Chunky Minecraft rendering on AWS Fargate, with
+S3 as an output render PNG store.
+
+[Setup](#setup)
+[Run locally](#run-locally)
+[Run in Docker](#run-in-docker)
+[Set up Fargate](#set-up-fargate)
+[Run a remote render](#run-a-remote-render)
 
 ## Setup
 
@@ -8,19 +15,21 @@ Dockerized image + pipeline for Chunky Minecraft rendering, with S3 as a store.
 [Chunky website](https://chunky.llbit.se/).
 
 2. Set up at least one scene in the Chunky GUI, then copy the scene's directory
-   to this project in a `./scenes` directory.
+   to this project in a `./scenes` directory (at least the JSON file included).
 
-3. Install some dependencies:
+## Run locally
 
-    ```shell
-    sudo apt-get install default-jdk libopenjfx-java libcontrolsfx-java jq
-    ```
+Install some dependencies:
 
-3. Render the scene to a target SPP:
+```shell
+sudo apt-get install default-jdk libopenjfx-java libcontrolsfx-java jq
+```
 
-    ```shell
-    ./render-scene.sh $worldDir $sceneName $targetSpp
-    ```
+Render the scene to a target SPP:
+
+```shell
+./render-scene.sh $worldDir $sceneName $targetSpp
+```
 
 Optionally, restart the render from 0 SPP, and update the world files by adding
 the `--restart` option.
@@ -59,7 +68,13 @@ The Docker container can be used to run a render job remotely on AWS Fargate.
 
 First, deploy the basic infrastructure:
 
-> You may need to select a new backend S3 bucket in `terraform/main.tf`.
+Set your own S3 bucket name in the `terraform/main.tf` file for your Terraform
+state files.
+
+Then, create the basic infrastructure.
+
+> When you're done, remember to `terraform destroy` to remove all the created
+> infrastructure resources.
 
 ```shell
 cd terraform
@@ -70,6 +85,12 @@ export TF_VAR_output_bucket=...
 
 terraform init
 terraform apply
+```
+
+Build the Docker image, if you haven't already done so:
+
+```shell
+docker build -t chunky-fargate .
 ```
 
 Next, push the most recently built image (with up to date scenes) to ECR:
@@ -86,8 +107,6 @@ export AWS_SECRET_ACCESS_KEY=...
 ./pipeline/push-image.sh
 ```
 
-## Run a remote render
-
 If you haven't already, add a statement to the Bucket Policy of the output
 bucket allowing the Task Role access, similar to the following:
 
@@ -96,7 +115,7 @@ bucket allowing the Task Role access, similar to the following:
   "Sid": "Stmt1610292864520",
   "Effect": "Allow",
   "Principal": {
-    "AWS": "arn:aws:iam::617929423658:role/chunky-fargate-task-role"
+    "AWS": "arn:aws:iam::$ACCOUNT_ID:role/chunky-fargate-task-role"
   },
   "Action": [
     "s3:GetObject",
@@ -112,14 +131,18 @@ bucket allowing the Task Role access, similar to the following:
 
 Create a new Task Definition in the created ECS service:
 
-> This need only be done if adjusting the task/container setup, not each task
+> This need only be re-done if adjusting the task/container setup, not each task
 > run.
 
 ```shell
 ./pipeline/create-task-definition.sh
 ```
 
-Finally, run a Fargate task to perform the render of the chosen world and scene:
+## Run a remote render
+
+Now the fun part!
+
+Run a Fargate task to perform the render of the chosen world and scene:
 
 ```shell
 # URL where world files zip can be found
