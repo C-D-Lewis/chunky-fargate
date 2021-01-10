@@ -3,11 +3,11 @@
 Dockerized image + pipeline for Chunky Minecraft rendering on AWS Fargate, with
 S3 as an output render PNG store.
 
-[Setup](#setup)
-[Run locally](#run-locally)
-[Run in Docker](#run-in-docker)
-[Set up Fargate](#set-up-fargate)
-[Run a remote render](#run-a-remote-render)
+* [Setup](#setup)
+* [Run locally](#run-locally)
+* [Run in Docker](#run-in-docker)
+* [Set up Fargate](#set-up-fargate)
+* [Run a remote render](#run-a-remote-render)
 
 ## Setup
 
