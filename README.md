@@ -73,14 +73,14 @@ docker run \
 
 ## Set up Fargate
 
-The Docker container can be used to run a render job remotely on AWS Fargate.
+The Docker container can be used to run a render job remotely on AWS Fargate,
+downloading the world from a specified URL, and uploading the output PNG
+snapshot to a specified S3 bucket.
 
-First, deploy the basic infrastructure:
+First, set your own pre-existing S3 bucket name in the `terraform/main.tf` file
+for your Terraform state files.
 
-Set your own S3 bucket name in the `terraform/main.tf` file for your Terraform
-state files.
-
-Then, create the basic infrastructure.
+Then, create the basic infrastructure resources required (ECR, ECS, IAM, etc.):
 
 > When you're done, remember to `terraform destroy` to remove all the created
 > infrastructure resources.
