@@ -11,9 +11,10 @@ S3 as an output render PNG store.
 
 ### TODO
 
+- Remote scenes in S3 (no need to push new Docker image).
 - Trigger a task from an S3 world files upload.
-- Parallelize multiple scenes.
 - Notification when a render task completes.
+- Interactive CLI.
 
 ## Setup
 
