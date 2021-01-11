@@ -17,7 +17,7 @@ ECR_URI="$(echo $RES | jq -r '.repositories[0].repositoryUri')"
 TARGET="$ECR_URI:latest"  # Only want one image in the repo
 docker tag $IMAGE $TARGET
 
-# Push
+# Push image
 echo "Pushing to ECR: $TARGET"
 docker push $TARGET
 echo "Push complete"

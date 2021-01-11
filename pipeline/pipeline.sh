@@ -7,12 +7,16 @@ set -eu
 
 WORLD_DIR="$(pwd)/world"
 
+# Fetch the world zip file
 ./pipeline/fetch-world.sh $WORLD_URL
 
+# Do the render
 RENDER_START=$(date +%s)
 ./pipeline/render-scene.sh $WORLD_DIR $SCENE_NAME $TARGET_SPP --restart
 RENDER_TIME=$(($(date +%s) - $RENDER_START))
 
+# Upload the output snapshot
 ./pipeline/upload-snapshot.sh $RENDER_TIME
 
+# In case running locally, clean up temporary world
 rm -rf $WORLD_DIR
