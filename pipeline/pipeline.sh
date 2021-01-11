@@ -9,8 +9,10 @@ WORLD_DIR="$(pwd)/world"
 
 ./pipeline/fetch-world.sh $WORLD_URL
 
+RENDER_START=$(date +%s)
 ./pipeline/render-scene.sh $WORLD_DIR $SCENE_NAME $TARGET_SPP --restart
+RENDER_TIME=$(($(date +%s) - $RENDER_START))
 
-./pipeline/upload-snapshot.sh
+./pipeline/upload.sh $RENDER_TIME
 
 rm -rf $WORLD_DIR

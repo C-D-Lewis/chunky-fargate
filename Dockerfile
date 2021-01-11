@@ -28,4 +28,7 @@ COPY pipeline /chunky/pipeline
 # Scenes that will be used
 COPY scenes /chunky/scenes
 
-ENTRYPOINT ["./pipeline/fetch-render-upload.sh"]
+# Don't need old snapshots
+RUN rm -rf /chunky/scenes/**/snapshots
+
+ENTRYPOINT ["./pipeline/pipeline.sh"]
