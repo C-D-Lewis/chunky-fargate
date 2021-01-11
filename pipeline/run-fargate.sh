@@ -7,6 +7,11 @@ FAMILY="chunky-fargate-td"
 TASK_DEF_NAME="$PROJECT_NAME-definition"
 CLUSTER_NAME="$PROJECT_NAME-ecs-cluster"
 
+read -p "World zip URL: " WORLD_URL
+read -p "Scene name: " SCENE_NAME
+read -p "Target SPP: " TARGET_SPP
+read -p "Output S3 bucket: " OUTPUT_BUCKET
+
 # Get security group
 RES=$(aws ec2 describe-security-groups --filters "Name=tag:Project,Values=$PROJECT_NAME")
 SECURITY_GROUP_ID=$(echo $RES | jq -r '.SecurityGroups[0].GroupId')

@@ -145,25 +145,26 @@ Create a new Task Definition in the created ECS service:
 ./pipeline/create-task-definition.sh
 ```
 
+> Optionally add `--max` to use a 4 vCPU, 8GB Fargate configuration. This will
+> take effect until the same script is run without the flag.
+
 ## Run a remote render
 
 Now the fun part!
 
 Run a Fargate task to perform the render of the chosen world and scene:
 
-```shell
-# URL where world files zip can be found
-export WORLD_URL=...
-# Name of scene to render
-export SCENE_NAME=...
-# Target samples per pixel
-export TARGET_SPP=...
-# Bucket where output PNG can be saved
-export OUTPUT_BUCKET=...
-
+```
 # Create the Fargate task
 ./pipeline/run-fargate.sh
 ```
+
+You will be asked for the following which may change for each render task:
+
+* World URL - URL where world files zip can be found.
+* Scene name - Name of scene in `scenes` to render.
+* Target SPP - Target samples per pixel.
+* Output S3 bucket - Bucket where output PNG can be saved.
 
 The output PNG will be available in `$OUTPUT_BUCKET` as per a normal Docker run.
 
@@ -171,9 +172,12 @@ If you add or change a scene in `scenes/`, don't forget to build the image, and
 push an update to ECR:
 
 ```shell
+# Update scenes
 cp /path/to/new/scene ./scenes
 
+# Rebuild image
 docker built -t chunky-fargate .
 
+# Update image in ECR
 ./pipeline/push-image.sh
 ```

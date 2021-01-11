@@ -13,6 +13,6 @@ RENDER_START=$(date +%s)
 ./pipeline/render-scene.sh $WORLD_DIR $SCENE_NAME $TARGET_SPP --restart
 RENDER_TIME=$(($(date +%s) - $RENDER_START))
 
-./pipeline/upload.sh $RENDER_TIME
+./pipeline/upload-snapshot.sh $RENDER_TIME
 
 rm -rf $WORLD_DIR

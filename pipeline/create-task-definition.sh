@@ -6,10 +6,14 @@ PROJECT_NAME="chunky-fargate"
 ECR_NAME="$PROJECT_NAME-service-ecr"
 CPU="2048"
 MEMORY="4096"
-# CPU="4096"
-# MEMORY="8192"
 TASK_DEF_NAME="$PROJECT_NAME-definition"
 FAMILY="chunky-fargate-td"
+
+# Max Fargate size
+if [[ "$*" == *--max* ]]; then
+  CPU="4096"
+  MEMORY="8192"
+fi
 
 # Get ECR URI
 RES=$(aws ecr describe-repositories --repository-names $ECR_NAME)
