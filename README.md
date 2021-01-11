@@ -7,14 +7,14 @@ S3 as an output render PNG store.
 * [Run locally](#run-locally)
 * [Run in Docker](#run-in-docker)
 * [Set up Fargate](#set-up-fargate)
-* [Run a remote render](#run-a-remote-render)
+* [Run a remote render task](#run-a-remote-render-task)
 
 ### TODO
 
 - Remote scenes in S3 (no need to push new Docker image).
 - Trigger a task from an S3 world files upload.
 - Notification when a render task completes.
-- Interactive CLI.
+
 
 ## Setup
 
@@ -23,6 +23,7 @@ S3 as an output render PNG store.
 
 2. Set up at least one scene in the Chunky GUI, then copy the scene's directory
    to this project in a `./scenes` directory (at least the JSON file included).
+
 
 ## Run locally
 
@@ -68,6 +69,7 @@ docker run \
   -e AWS_SECRET_ACCESS_KEY \
   chunky-fargate
 ```
+
 
 ## Set up Fargate
 
@@ -148,7 +150,8 @@ Create a new Task Definition in the created ECS service:
 > Optionally add `--max` to use a 4 vCPU, 8GB Fargate configuration. This will
 > take effect until the same script is run without the flag.
 
-## Run a remote render
+
+## Run a remote render task
 
 Now the fun part!
 
