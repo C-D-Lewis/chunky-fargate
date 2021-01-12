@@ -7,8 +7,11 @@ set -eu
 
 WORLD_DIR="$(pwd)/world"
 
+# Fetch the scene JSON file
+./pipeline/fetch-scene.sh
+
 # Fetch the world zip file
-./pipeline/fetch-world.sh $WORLD_URL
+./pipeline/fetch-world.sh
 
 # Do the render
 RENDER_START=$(date +%s)

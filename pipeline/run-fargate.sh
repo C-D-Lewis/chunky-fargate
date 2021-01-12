@@ -10,7 +10,9 @@ CLUSTER_NAME="$PROJECT_NAME-ecs-cluster"
 read -p "World zip URL: " WORLD_URL
 read -p "Scene name: " SCENE_NAME
 read -p "Target SPP: " TARGET_SPP
-read -p "Output S3 bucket: " OUTPUT_BUCKET
+read -p "Output S3 bucket: s3://" OUTPUT_BUCKET
+
+echo "Fetching required resources..."
 
 # Get security group
 RES=$(aws ec2 describe-security-groups --filters "Name=tag:Project,Values=$PROJECT_NAME")

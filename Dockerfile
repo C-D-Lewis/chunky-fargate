@@ -25,10 +25,4 @@ RUN java -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar -download-mc $MC_VERSION
 # Pipeline
 COPY pipeline /chunky/pipeline
 
-# Scenes that will be used
-COPY scenes /chunky/scenes
-
-# Don't need old snapshots
-RUN rm -rf /chunky/scenes/**/snapshots
-
 ENTRYPOINT ["./pipeline/pipeline.sh"]

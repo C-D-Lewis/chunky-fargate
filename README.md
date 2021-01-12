@@ -11,9 +11,11 @@ S3 as an output render PNG store.
 
 ### TODO
 
-- Remote scenes in S3 (no need to push new Docker image).
+- Task Definition fixed in Terraform.
 - Trigger a task from an S3 world files upload.
 - Notification when a render task completes.
+- Instance size in task definition overrides.
+- Pipeline for RPi.
 
 
 ## Setup
@@ -22,7 +24,8 @@ S3 as an output render PNG store.
 [Chunky website](https://chunky.llbit.se/).
 
 2. Set up at least one scene in the Chunky GUI, then copy the scene's directory
-   to this project in a `./scenes` directory (at least the JSON file included).
+   to this project in a local `./scenes` directory
+   (at least the JSON file included).
 
 
 ## Run locally
@@ -33,20 +36,34 @@ Install some dependencies:
 sudo apt-get install default-jdk libopenjfx-java libcontrolsfx-java jq
 ```
 
+Copy a scene to a local `./scenes` directory:
+
+```
+mkdir -r scenes
+
+cp -r /mnt/c/Users/Chris/.chunky/scenes/render-test-scene scenes/
+```
+
 Render the scene to a target SPP:
 
 ```shell
 ./pipeline/render-scene.sh $worldDir $sceneName $targetSpp
 ```
 
-Optionally, restart the render from 0 SPP, and update the world files by adding
-the `--restart` option.
+> Optionally, restart the render from 0 SPP, and update the world files by
+> adding the `--restart` option.
+
+The output PNG snapshot will be saved in the scene directory, for example:
+
+```
+scenes/render-test-scene/snapshots/render-test-scene-100.png
+```
 
 
 ## Run in Docker
 
-The Docker image is used to fetch a world, render a scene, and upload the output
-PNG snapshot to an S3 bucket.
+The Docker image is used to fetch a world and scene, render the scene, and
+upload the output PNG snapshot to an S3 bucket in a `mc-renders` directory.
 
 Build the image:
 
@@ -54,9 +71,22 @@ Build the image:
 docker build -t chunky-fargate .
 ```
 
-Then run, supplying all required parameters. This will pull the world zip from
-`$WORLD_URL` and render scene `$SCENE_NAME`, using the AWS credentials
-specified to push the output render PNG snapshot to `$OUTPUT_BUCKET/$SCENE_NAME/$DATE`:
+Upload the scene JSON file to the S3 bucket in a `mc-scenes` directory. The
+scenes in the bucket must point to the worlds present in the `mc-worlds` bucket
+directory. For example:
+
+```
+s3://chunky-rendering-bucket/
+  - mc-worlds/
+    - village-world.zip
+  - mc-scenes/
+    - village-church-interior.json
+```
+
+Then run, supplying all the required parameters. This will pull the world zip
+from `$WORLD_URL`, and fetch and render scene `$SCENE_NAME`, using the AWS
+credentials specified, and finally push the output render PNG snapshot to
+`$OUTPUT_BUCKET/$SCENE_NAME/$DATE`:
 
 ```shell
 docker run \
@@ -82,15 +112,19 @@ for your Terraform state files.
 
 Then, create the basic infrastructure resources required (ECR, ECS, IAM, etc.):
 
-> When you're done, remember to `terraform destroy` to remove all the created
-> infrastructure resources.
+> When you're done with this project, remember to `terraform destroy` to remove
+> all the created infrastructure resources.
 
 ```shell
 cd terraform
 
 # Specity required variables
-# Output S3 bucket (same as OUTPUT_BUCKET below, but just the bucket name)
+# Output S3 bucket (same as OUTPUT_BUCKET above)
 export TF_VAR_output_bucket=...
+# AWS credentials
+export AWS_DEFAULT_REGION=us-east-1
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
 
 terraform init
 terraform apply
@@ -102,7 +136,7 @@ Build the Docker image, if you haven't already done so:
 docker build -t chunky-fargate .
 ```
 
-Next, push the most recently built image (with up to date scenes) to ECR:
+Next, push the most recently built image to ECR:
 
 > The first push with the dependency layer will take a while, but subsequent
 > updates to the image should not.
@@ -117,7 +151,7 @@ export AWS_SECRET_ACCESS_KEY=...
 ```
 
 If you haven't already, add a statement to the Bucket Policy of the output
-bucket allowing the Task Role access, similar to the following:
+S3 bucket allowing the Task Role access, similar to the following:
 
 ```
 {
@@ -171,16 +205,4 @@ You will be asked for the following which may change for each render task:
 
 The output PNG will be available in `$OUTPUT_BUCKET` as per a normal Docker run.
 
-If you add or change a scene in `scenes/`, don't forget to build the image, and
-push an update to ECR:
-
-```shell
-# Update scenes
-cp /path/to/new/scene ./scenes
-
-# Rebuild image
-docker built -t chunky-fargate .
-
-# Update image in ECR
-./pipeline/push-image.sh
-```
+If you add or change a scene, don't forget to update the scene JSON file in S3.

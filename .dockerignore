@@ -4,3 +4,4 @@ resources
 versions
 ./*.json
 terraform
+scenes

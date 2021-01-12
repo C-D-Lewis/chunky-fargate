@@ -36,6 +36,7 @@ fi
 
 # Start from scratch?
 if [[ "$*" == *--restart* ]]; then
+  echo "--restart was specified, attempting to clean the scene..."
   rm $SCENES_DIR/$SCENE_NAME/*.dump* | exit 0
   rm $SCENES_DIR/$SCENE_NAME/*.octree* | exit 0
 

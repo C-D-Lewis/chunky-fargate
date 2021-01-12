@@ -4,13 +4,11 @@ set -eu
 
 WORLD_DIR="$(pwd)/world"
 
-URL=$1
-
 mkdir -p $WORLD_DIR
 
 # Download
-echo "Downloading from $URL..."
-wget -q $URL
+echo "Downloading from $WORLD_URL..."
+wget -q $WORLD_URL
 
 # Unzip actual files to world directory
 echo "Unzipping..."
