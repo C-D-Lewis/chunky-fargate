@@ -1,5 +1,7 @@
 # chunky-fargate
 
+![](sample.png)
+
 Dockerized image + pipeline for Chunky Minecraft rendering on AWS Fargate, with
 S3 as an output render PNG store.
 
