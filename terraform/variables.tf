@@ -20,3 +20,15 @@ variable "output_bucket" {
   type        = string
   description = "Output S3 bucket to save renders to"
 }
+
+variable "container_cpu" {
+  type        = string
+  description = "Container CPU units"
+  default     = 4096
+}
+
+variable "container_memory" {
+  type        = string
+  description = "Container memory units"
+  default     = 8192
+}

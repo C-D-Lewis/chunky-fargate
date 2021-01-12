@@ -4,7 +4,7 @@ set -eu
 
 PROJECT_NAME="chunky-fargate"
 FAMILY="chunky-fargate-td"
-TASK_DEF_NAME="$PROJECT_NAME-definition"
+TASK_DEF_NAME="$PROJECT_NAME-container-def"
 CLUSTER_NAME="$PROJECT_NAME-ecs-cluster"
 
 read -p "World zip URL: " WORLD_URL

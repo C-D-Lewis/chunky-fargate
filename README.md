@@ -11,10 +11,8 @@ S3 as an output render PNG store.
 
 ### TODO
 
-- Task Definition fixed in Terraform.
 - Trigger a task from an S3 world files upload.
 - Notification when a render task completes.
-- Instance size in task definition overrides.
 - Pipeline for RPi.
 
 
@@ -171,18 +169,6 @@ S3 bucket allowing the Task Role access, similar to the following:
   ]
 }
 ```
-
-Create a new Task Definition in the created ECS service:
-
-> This need only be re-done if adjusting the task/container setup, not each task
-> run.
-
-```shell
-./pipeline/create-task-definition.sh
-```
-
-> Optionally add `--max` to use a 4 vCPU, 8GB Fargate configuration. This will
-> take effect until the same script is run without the flag.
 
 
 ## Run a remote render task
