@@ -151,7 +151,7 @@ export AWS_SECRET_ACCESS_KEY=...
 If you haven't already, add a statement to the Bucket Policy of the output
 S3 bucket allowing the Task Role access, similar to the following:
 
-```
+```json
 {
   "Sid": "Stmt1610292864520",
   "Effect": "Allow",
@@ -177,7 +177,7 @@ Now the fun part!
 
 Run a Fargate task to perform the render of the chosen world and scene:
 
-```
+```shell
 # Create the Fargate task
 ./pipeline/run-fargate.sh
 ```
