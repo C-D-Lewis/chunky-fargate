@@ -16,7 +16,6 @@ render on AWS Fargate, with S3 as an input and output store.
 
 - Trigger a task from an S3 world files upload.
 - Notification when a render task completes.
-- Pipeline for RPi.
 
 
 ## Setup
