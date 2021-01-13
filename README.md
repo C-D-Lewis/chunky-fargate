@@ -194,7 +194,7 @@ S3 bucket: s3://public-files.chrislewis.me.uk
 
 Fetching required resources...
 Creating task...
-Started: arn:aws:ecs:us-east-1:617929423658:task/chunky-fargate-ecs-cluster/5ee16ddc0c6f4e07b31879afa88c8002
+Started: arn:aws:ecs:us-east-1:$ACCOUNT_ID:task/chunky-fargate-ecs-cluster/$TASK_ID
 ```
 
 The output PNG will be available in `$BUCKET` as per a normal Docker run.
