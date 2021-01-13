@@ -47,19 +47,13 @@ SPP:
 > Optionally, restart the render from 0 SPP, and update the world files by
 > adding the `--restart` option.
 
-The output PNG snapshot will be saved by Chunky in the scene directory, for
-example:
-
-```
-scenes/render-test-scene/snapshots/render-test-scene-100.png
-```
+The output PNG snapshot will be saved by Chunky in the scene directory.
 
 
 ## Run in Docker
 
 The Docker image is used to fetch a world and scene from S3, render the scene,
-and upload the output PNG snapshot to the same S3 bucket in a `mc-renders`
-directory.
+and upload the output PNG snapshot to the same S3 bucket.
 
 First, build the Docker image:
 
@@ -67,29 +61,33 @@ First, build the Docker image:
 docker build -t chunky-fargate .
 ```
 
-Upload the scene JSON file to the S3 bucket in a `mc-scenes` directory. The
-scenes in the bucket must point to the worlds present in the `mc-worlds` bucket
-directory. For example:
+Next, select an S3 bucket and create a top-level `chunky-fargate` directory,
+where all concerned world, scene, and output render files will be located.
+
+Upload the scene JSON file to the S3 bucket in a `scenes` subdirectory. The
+scenes in the bucket must point to the worlds present in the `worlds`
+subdirectory. For example:
 
 ```
-s3://$OUTPUT_BUCKET/
-  - mc-worlds/
-    - village-world.zip
-  - mc-scenes/
-    - village-church-interior.json
+s3://$BUCKET/
+  - chunky-fargate/
+    - worlds/
+      - village-world.zip
+    - scenes/
+      - village-church-interior.json
 ```
 
 Then run the Docker image, supplying all the required parameters as environment
-variables. This will pull the world zip from `$WORLD_URL`, and fetch and render
+variables. This will pull the world `$WORLD_NAME`, and fetch and render
 the scene `$SCENE_NAME`, using the AWS credentials specified, and finally push
-the output render PNG snapshot to `$OUTPUT_BUCKET/$SCENE_NAME/$DATE`:
+the output render PNG snapshot to `$BUCKET/$SCENE_NAME/$DATE`:
 
 ```shell
 docker run \
-  -e WORLD_URL \
+  -e WORLD_NAME \
   -e SCENE_NAME \
   -e TARGET_SPP \
-  -e OUTPUT_BUCKET \
+  -e BUCKET \
   -e AWS_DEFAULT_REGION \
   -e AWS_ACCESS_KEY_ID \
   -e AWS_SECRET_ACCESS_KEY \
@@ -102,22 +100,24 @@ docker run \
 The Docker container can also be used to run a render job remotely on AWS
 Fargate, a serverless compute platform.
 
-First, set your own pre-existing S3 bucket name in the `terraform/main.tf` file
+> If you haven't, choose or create an S3 bucket for the project to use, and
+> create a top-level `chunky-fargate` directory, where all concerned world,
+> scene, and output render files will be located.
+
+Next, set your own pre-existing S3 bucket name in the `terraform/main.tf` file
 for your Terraform state files.
 
 Then, create the basic infrastructure resources required (ECR, ECS, IAM, etc.)
 by running Terraform:
 
-> When you're done with this project, remember to `terraform destroy` to remove
-> all the created infrastructure resources.
-
 ```shell
 cd terraform
 
 # Specity required variables
-# Output S3 bucket (same as OUTPUT_BUCKET above)
-export TF_VAR_output_bucket=...
-# AWS credentials
+# Output S3 bucket (same as $BUCKET above)
+export TF_VAR_bucket=...
+
+# AWS credentials to use
 export AWS_DEFAULT_REGION=us-east-1
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
@@ -126,23 +126,18 @@ terraform init
 terraform apply
 ```
 
-Build the Docker image, if you haven't already done so:
+Build the Docker image:
 
 ```shell
 docker build -t chunky-fargate .
 ```
 
-Next, push the most recently built image to ECR:
+Push the most recently built image to ECR:
 
 > The first push with the dependency layer will take a while, but subsequent
 > updates to the image should not.
 
 ```shell
-# AWS credentials
-export AWS_DEFAULT_REGION=us-east-1
-export AWS_ACCESS_KEY_ID=...
-export AWS_SECRET_ACCESS_KEY=...
-
 ./pipeline/push-image.sh
 ```
 
@@ -162,8 +157,8 @@ S3 bucket allowing the Task Role access, similar to the following:
     "s3:ListBucket"
   ],
   "Resource": [
-    "arn:aws:s3:::$OUTPUT_BUCKET/*",
-    "arn:aws:s3:::$OUTPUT_BUCKET"
+    "arn:aws:s3:::$BUCKET/*",
+    "arn:aws:s3:::$BUCKET"
   ]
 }
 ```
@@ -182,43 +177,33 @@ Run a Fargate task to perform the render of the chosen world and scene:
 
 You will be asked for the following which may change for each render task:
 
-* World URL - URL where world files zip can be found.
+* World name - Name of the world files zip file.
 * Scene name - Name of scene in `scenes` to render.
 * Target SPP - Target samples per pixel.
 * Output S3 bucket - Bucket where output PNG can be saved.
 
-The output PNG will be available in `$OUTPUT_BUCKET` as per a normal Docker run.
+For example:
+
+```
+$ ./pipeline/run-fargate.sh
+
+World name: render-test-world
+Scene name: render-test-scene
+Target SPP: 100
+S3 bucket: s3://public-files.chrislewis.me.uk
+
+Fetching required resources...
+Creating task...
+Started: arn:aws:ecs:us-east-1:617929423658:task/chunky-fargate-ecs-cluster/5ee16ddc0c6f4e07b31879afa88c8002
+```
+
+The output PNG will be available in `$BUCKET` as per a normal Docker run.
 
 If you add or change a scene, don't forget to update the scene JSON file in S3.
 
 
 ## Render scenes in parallel
 
-The `--use-env` flag provided in `pipeline/run-fargate.sh` allows multiple tasks
-to be created to run in parallel by using environment variables instead of
-prompting for values.
-
-An example is shown below for multiple scenes:
-
-```shell
-# Variables used for all scenes
-export WORLD_URL=...
-export TARGET_SPP=200
-export OUTPUT_BUCKET=...
-
-# Scene 1
-export SCENE_NAME=village-lodge
-./pipeline/run-fargate.sh --use-env
-
-# Scene 2
-export SCENE_NAME=village-ice-rink
-./pipeline/run-fargate.sh --use-env
-
-# Scene 3
-export SCENE_NAME=village-railway
-./pipeline/run-fargate.sh --use-env
-
-# etc...
-```
+TODO: tasks.json
 
 As usual, once each task completes all the output PNG files will be found in S3.

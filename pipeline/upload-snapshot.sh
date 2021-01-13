@@ -6,7 +6,7 @@ set -eu
 DATE=$(date +'%m-%d-%Y')
 SCENES_DIR="scenes"
 SCENE_SNAPSHOT_PATH="$SCENES_DIR/$SCENE_NAME/snapshots"
-BUCKET_DIR_NAME="mc-renders"
+BUCKET_RENDERS_DIR="chunky-fargate/renders"
 
 RENDER_TIME=$1
 
@@ -18,4 +18,4 @@ mv "$SCENE_SNAPSHOT_PATH/$PNG_FILE_NAME" "$SCENE_SNAPSHOT_PATH/$BASENAME-$RENDER
 # Upload to S3 - permissions are in the environment
 aws s3 sync \
   $SCENE_SNAPSHOT_PATH \
-  "s3://$OUTPUT_BUCKET/$BUCKET_DIR_NAME/$SCENE_NAME/$DATE/"
+  "s3://$BUCKET/$BUCKET_RENDERS_DIR/$SCENE_NAME/$DATE/"

@@ -5,20 +5,13 @@ FAMILY="chunky-fargate-td"
 TASK_DEF_NAME="$PROJECT_NAME-container-def"
 CLUSTER_NAME="$PROJECT_NAME-ecs-cluster"
 
-if [[ "$*" == "--use-env" ]]; then
-  echo "Using environment variables:"
-  set -eu
-  echo "  World zip URL: $WORLD_URL"
-  echo "  Scene name: $SCENE_NAME"
-  echo "  Target SPP: $TARGET_SPP"
-  echo "  Output S3 bucket: s3://$OUTPUT_BUCKET"
-else
-  read -p "World zip URL: " WORLD_URL
-  read -p "Scene name: " SCENE_NAME
-  read -p "Target SPP: " TARGET_SPP
-  read -p "Output S3 bucket: s3://" OUTPUT_BUCKET
-fi
+echo ""
+read -p "World name: " WORLD_NAME
+read -p "Scene name: " SCENE_NAME
+read -p "Target SPP: " TARGET_SPP
+read -p "S3 bucket: s3://" BUCKET
 
+echo ""
 echo "Fetching required resources..."
 
 # Get security group
@@ -35,7 +28,7 @@ SUBNET_ID=$(echo $RES | jq -r '.Subnets[0].SubnetId')
 
 # Create a task
 echo "Creating task..."
-aws ecs run-task \
+RES=$(aws ecs run-task \
   --cluster $CLUSTER_NAME \
   --task-definition $FAMILY \
   --count 1 \
@@ -51,10 +44,15 @@ aws ecs run-task \
     \"containerOverrides\": [{
       \"name\": \"$TASK_DEF_NAME\",
       \"environment\": [
-        { \"name\": \"WORLD_URL\", \"value\": \"$WORLD_URL\" },
+        { \"name\": \"WORLD_NAME\", \"value\": \"$WORLD_NAME\" },
         { \"name\": \"SCENE_NAME\", \"value\": \"$SCENE_NAME\" },
         { \"name\": \"TARGET_SPP\", \"value\": \"$TARGET_SPP\" },
-        { \"name\": \"OUTPUT_BUCKET\", \"value\": \"$OUTPUT_BUCKET\" }
+        { \"name\": \"BUCKET\", \"value\": \"$BUCKET\" }
       ]
     }]
-  }"
+  }" \
+)
+
+TASK_ID=$(echo $RES | jq -r '.tasks[0].taskArn')
+echo "Started: $TASK_ID"
+echo ""

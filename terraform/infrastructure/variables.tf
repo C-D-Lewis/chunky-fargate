@@ -4,7 +4,7 @@ variable "project_name" {}
 
 variable "vpc_id" {}
 
-variable "output_bucket" {}
+variable "bucket" {}
 
 variable "container_cpu" {}
 

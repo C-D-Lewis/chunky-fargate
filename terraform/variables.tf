@@ -16,9 +16,9 @@ variable "vpc_id" {
   default     = "vpc-c3b70bb9"
 }
 
-variable "output_bucket" {
+variable "bucket" {
   type        = string
-  description = "Output S3 bucket to save renders to"
+  description = "S3 bucket to read worlds and scenes from, and save renders to"
 }
 
 variable "container_cpu" {
