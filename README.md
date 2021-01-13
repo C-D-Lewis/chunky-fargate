@@ -2,8 +2,8 @@
 
 ![](sample.png)
 
-Dockerized image + pipeline for Chunky Minecraft rendering on AWS Fargate, with
-S3 as an output render PNG store.
+Dockerized image + pipeline for the [Chunky](https://chunky.llbit.se/) Minecraft
+render on AWS Fargate, with S3 as an input and output store.
 
 * [Setup](#setup)
 * [Run locally](#run-locally)
@@ -31,21 +31,14 @@ S3 as an output render PNG store.
 
 ## Run locally
 
-Install some dependencies:
+Install some dependencies (Java + JavaFX):
 
 ```shell
 sudo apt-get install default-jdk libopenjfx-java libcontrolsfx-java jq
 ```
 
-Copy a scene to a local `./scenes` directory:
-
-```
-mkdir -r scenes
-
-cp -r /mnt/c/Users/Chris/.chunky/scenes/render-test-scene scenes/
-```
-
-Render the scene to a target SPP:
+Copy a scene to a local `./scenes` directory, then render the scene to a target
+SPP:
 
 ```shell
 ./pipeline/render-scene.sh $worldDir $sceneName $targetSpp
@@ -54,7 +47,8 @@ Render the scene to a target SPP:
 > Optionally, restart the render from 0 SPP, and update the world files by
 > adding the `--restart` option.
 
-The output PNG snapshot will be saved in the scene directory, for example:
+The output PNG snapshot will be saved by Chunky in the scene directory, for
+example:
 
 ```
 scenes/render-test-scene/snapshots/render-test-scene-100.png
@@ -63,10 +57,11 @@ scenes/render-test-scene/snapshots/render-test-scene-100.png
 
 ## Run in Docker
 
-The Docker image is used to fetch a world and scene, render the scene, and
-upload the output PNG snapshot to an S3 bucket in a `mc-renders` directory.
+The Docker image is used to fetch a world and scene from S3, render the scene,
+and upload the output PNG snapshot to the same S3 bucket in a `mc-renders`
+directory.
 
-Build the image:
+First, build the Docker image:
 
 ```shell
 docker build -t chunky-fargate .
@@ -77,17 +72,17 @@ scenes in the bucket must point to the worlds present in the `mc-worlds` bucket
 directory. For example:
 
 ```
-s3://chunky-rendering-bucket/
+s3://$OUTPUT_BUCKET/
   - mc-worlds/
     - village-world.zip
   - mc-scenes/
     - village-church-interior.json
 ```
 
-Then run, supplying all the required parameters. This will pull the world zip
-from `$WORLD_URL`, and fetch and render scene `$SCENE_NAME`, using the AWS
-credentials specified, and finally push the output render PNG snapshot to
-`$OUTPUT_BUCKET/$SCENE_NAME/$DATE`:
+Then run the Docker image, supplying all the required parameters as environment
+variables. This will pull the world zip from `$WORLD_URL`, and fetch and render
+the scene `$SCENE_NAME`, using the AWS credentials specified, and finally push
+the output render PNG snapshot to `$OUTPUT_BUCKET/$SCENE_NAME/$DATE`:
 
 ```shell
 docker run \
@@ -104,14 +99,14 @@ docker run \
 
 ## Set up Fargate
 
-The Docker container can be used to run a render job remotely on AWS Fargate,
-downloading the world from a specified URL, and uploading the output PNG
-snapshot to a specified S3 bucket.
+The Docker container can also be used to run a render job remotely on AWS
+Fargate, a serverless compute platform.
 
 First, set your own pre-existing S3 bucket name in the `terraform/main.tf` file
 for your Terraform state files.
 
-Then, create the basic infrastructure resources required (ECR, ECS, IAM, etc.):
+Then, create the basic infrastructure resources required (ECR, ECS, IAM, etc.)
+by running Terraform:
 
 > When you're done with this project, remember to `terraform destroy` to remove
 > all the created infrastructure resources.
@@ -200,7 +195,8 @@ If you add or change a scene, don't forget to update the scene JSON file in S3.
 ## Render scenes in parallel
 
 The `--use-env` flag provided in `pipeline/run-fargate.sh` allows multiple tasks
-to be created to run in parallel enabling a more efficient use of render time.
+to be created to run in parallel by using environment variables instead of
+prompting for values.
 
 An example is shown below for multiple scenes:
 
