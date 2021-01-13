@@ -10,6 +10,7 @@ S3 as an output render PNG store.
 * [Run in Docker](#run-in-docker)
 * [Set up Fargate](#set-up-fargate)
 * [Run a remote render task](#run-a-remote-render-task)
+* [Render scenes in parallel](#render-scenes-in-parallel)
 
 ### TODO
 
@@ -194,3 +195,34 @@ You will be asked for the following which may change for each render task:
 The output PNG will be available in `$OUTPUT_BUCKET` as per a normal Docker run.
 
 If you add or change a scene, don't forget to update the scene JSON file in S3.
+
+
+## Render scenes in parallel
+
+The `--use-env` flag provided in `pipeline/run-fargate.sh` allows multiple tasks
+to be created to run in parallel enabling a more efficient use of render time.
+
+An example is shown below for multiple scenes:
+
+```shell
+# Variables used for all scenes
+export WORLD_URL=...
+export TARGET_SPP=200
+export OUTPUT_BUCKET=...
+
+# Scene 1
+export SCENE_NAME=village-lodge
+./pipeline/run-fargate.sh --use-env
+
+# Scene 2
+export SCENE_NAME=village-ice-rink
+./pipeline/run-fargate.sh --use-env
+
+# Scene 3
+export SCENE_NAME=village-railway
+./pipeline/run-fargate.sh --use-env
+
+# etc...
+```
+
+As usual, once each task completes all the output PNG files will be found in S3.

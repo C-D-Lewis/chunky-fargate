@@ -21,12 +21,12 @@
 set -eu
 
 MC_VERSION="1.16.4"
-THREADS="8"
 SCENES_DIR="scenes"
 
 WORLD_DIR=$1
 SCENE_NAME=$2
 TARGET_SPP=$3
+THREADS=${$4:-"8"}
 
 # First time setup
 if [[ ! -d "resources" ]]; then

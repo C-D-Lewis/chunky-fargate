@@ -6,6 +6,7 @@ set -eu
 # ./pipeline.sh
 
 WORLD_DIR="$(pwd)/world"
+THREADS="4"  # 4 threads for Fargate 4 vCPU
 
 # Fetch the scene JSON file
 ./pipeline/fetch-scene.sh
@@ -15,7 +16,7 @@ WORLD_DIR="$(pwd)/world"
 
 # Do the render
 RENDER_START=$(date +%s)
-./pipeline/render-scene.sh $WORLD_DIR $SCENE_NAME $TARGET_SPP --restart
+./pipeline/render-scene.sh $WORLD_DIR $SCENE_NAME $TARGET_SPP $THREADS --restart
 RENDER_TIME=$(($(date +%s) - $RENDER_START))
 
 # Upload the output snapshot

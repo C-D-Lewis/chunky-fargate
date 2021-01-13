@@ -1,16 +1,23 @@
 #!/bin/bash
 
-set -eu
-
 PROJECT_NAME="chunky-fargate"
 FAMILY="chunky-fargate-td"
 TASK_DEF_NAME="$PROJECT_NAME-container-def"
 CLUSTER_NAME="$PROJECT_NAME-ecs-cluster"
 
-read -p "World zip URL: " WORLD_URL
-read -p "Scene name: " SCENE_NAME
-read -p "Target SPP: " TARGET_SPP
-read -p "Output S3 bucket: s3://" OUTPUT_BUCKET
+if [[ "$*" == "--use-env" ]]; then
+  echo "Using environment variables:"
+  set -eu
+  echo "  World zip URL: $WORLD_URL"
+  echo "  Scene name: $SCENE_NAME"
+  echo "  Target SPP: $TARGET_SPP"
+  echo "  Output S3 bucket: s3://$OUTPUT_BUCKET"
+else
+  read -p "World zip URL: " WORLD_URL
+  read -p "Scene name: " SCENE_NAME
+  read -p "Target SPP: " TARGET_SPP
+  read -p "Output S3 bucket: s3://" OUTPUT_BUCKET
+fi
 
 echo "Fetching required resources..."
 
