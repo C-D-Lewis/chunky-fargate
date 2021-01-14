@@ -11,7 +11,7 @@ read -p "Raspberry Pi IP: " IP
 echo "Copying ChunkyLauncher.jar:"
 rsync ChunkyLauncher.jar "pi@$IP:/home/pi/ChunkyLauncher.jar"
 
-echo "Connecting to Pi:"
+echo "Running Docker image on Pi:"
 CMD="
 rm -rf chunky-fargate
   && git clone https://github.com/c-d-lewis/chunky-fargate
