@@ -5,13 +5,21 @@ FAMILY="chunky-fargate-td"
 TASK_DEF_NAME="$PROJECT_NAME-container-def"
 CLUSTER_NAME="$PROJECT_NAME-ecs-cluster"
 
-echo ""
-read -p "World name: " WORLD_NAME
-read -p "Scene name: " SCENE_NAME
-read -p "Target SPP: " TARGET_SPP
-read -p "S3 bucket: s3://" BUCKET
+# If no params, ask for them
+if [ $# -eq 0 ]; then
+  echo ""
+  read -p "World name: " WORLD_NAME
+  read -p "Scene name: " SCENE_NAME
+  read -p "Target SPP: " TARGET_SPP
+  read -p "S3 bucket: s3://" BUCKET
+  echo ""
+else
+  BUCKET=$1
+  WORLD_NAME=$2
+  SCENE_NAME=$3
+  TARGET_SPP=$4
+fi
 
-echo ""
 echo "Fetching required resources..."
 
 # Get security group

@@ -15,7 +15,7 @@ echo "Running Docker image on Pi:"
 CMD="
 rm -rf chunky-fargate
   && git clone https://github.com/c-d-lewis/chunky-fargate
-  && cp ChunkyLauncher.jar chunky-fargate/
+  && mv ChunkyLauncher.jar chunky-fargate/
   && cd chunky-fargate
   && docker build -t chunky-fargate .
   && docker run

@@ -79,7 +79,7 @@ s3://$BUCKET/
 Then run the Docker image, supplying all the required parameters as environment
 variables. This will pull the world `$WORLD_NAME`, and fetch and render
 the scene `$SCENE_NAME`, using the AWS credentials specified, and finally push
-the output render PNG snapshot to `$BUCKET/$SCENE_NAME/$DATE`:
+the output render PNG snapshot to `$BUCKET/chunky-fargate/renders/$DATE`:
 
 ```shell
 docker run \
@@ -179,7 +179,7 @@ You will be asked for the following which may change for each render task:
 * World name - Name of the world files zip file.
 * Scene name - Name of scene in `scenes` to render.
 * Target SPP - Target samples per pixel.
-* Output S3 bucket - Bucket where output PNG can be saved.
+* S3 bucket - Bucket where worlds and scenes are, and output PNG can be saved.
 
 For example:
 
@@ -203,6 +203,36 @@ If you add or change a scene, don't forget to update the scene JSON file in S3.
 
 ## Render scenes in parallel
 
-TODO: tasks.json
+Define a set of one or more scenes to be rendered in parallel as separate
+Fargate tasks within a single world using a JSON file configuration as the
+following format example:
+
+```json
+{
+  "bucket": "public-files.chrislewis.me.uk",
+  "world": "render-test-world",
+  "scenes": [
+    {
+      "name": "render-test-scene",
+      "targetSpp": 150
+    }
+  ]
+}
+```
+
+Place the JSON file in a `tasks` directory in the S3 bucket:
+
+```
+s3://$BUCKET/
+  - chunky-fargate/
+    - tasks/
+      - render-test.json
+```
+
+Then, launch all scenes as tasks, specifying the JSON file's name. For example:
+
+```shell
+./pipeline/run-task-file.sh render-test.json
+```
 
 As usual, once each task completes all the output PNG files will be found in S3.

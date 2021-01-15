@@ -3,19 +3,19 @@
 
 set -eu
 
-DATE=$(date +'%m-%d-%Y')
+DATE=$(date +'%Y-%m-%d')
 SCENES_DIR="scenes"
 SCENE_SNAPSHOT_PATH="$SCENES_DIR/$SCENE_NAME/snapshots"
 BUCKET_RENDERS_DIR="chunky-fargate/renders"
 
 RENDER_TIME=$1
 
-# Add time taken to file
+# Find file name
 PNG_FILE_NAME=$(ls $SCENE_SNAPSHOT_PATH)
 BASENAME=$(basename $PNG_FILE_NAME ".png")
-mv "$SCENE_SNAPSHOT_PATH/$PNG_FILE_NAME" "$SCENE_SNAPSHOT_PATH/$BASENAME-$RENDER_TIME.png"
+SNAPSHOT_PATH="$SCENE_SNAPSHOT_PATH/$BASENAME.png"
 
-# Upload to S3 - permissions are in the environment
-aws s3 sync \
-  $SCENE_SNAPSHOT_PATH \
-  "s3://$BUCKET/$BUCKET_RENDERS_DIR/$SCENE_NAME/$DATE/"
+# Upload to S3
+aws s3 cp \
+  $SNAPSHOT_PATH \
+  "s3://$BUCKET/$BUCKET_RENDERS_DIR/$DATE/$BASENAME-$RENDER_TIME.png"
