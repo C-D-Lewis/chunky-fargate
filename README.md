@@ -110,19 +110,15 @@ Then, create the basic infrastructure resources required (ECR, ECS, IAM, etc.)
 by running Terraform:
 
 ```shell
-cd terraform
-
-# Specity required variables
-# Output S3 bucket (same as $BUCKET above)
-export TF_VAR_bucket=...
-
 # AWS credentials to use
 export AWS_DEFAULT_REGION=us-east-1
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
 
-terraform init
-terraform apply
+# S3 bucket to use (same as $BUCKET above)
+export TF_VAR_bucket=...
+
+./pipeline/deploy-infra.sh
 ```
 
 Build the Docker image:
