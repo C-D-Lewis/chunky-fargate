@@ -42,8 +42,8 @@ const runFargateForScene = async (world, Bucket, { name, targetSpp }) => {
        name: TASK_DEF_NAME,
        environment: [
           { name: 'WORLD_NAME', value: world },
-          { name: 'SCENE_NAME', value: '$SCENE_NAME' },
-          { name: 'TARGET_SPP', value: '$TARGET_SPP' },
+          { name: 'SCENE_NAME', value: name },
+          { name: 'TARGET_SPP', value: targetSpp },
           { name: 'BUCKET', value: Bucket },
         ]
       }]
