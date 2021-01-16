@@ -103,7 +103,7 @@ resource "aws_lambda_permission" "allow_bucket" {
 resource "aws_iam_policy" "lambda_logging" {
   count = var.upload_trigger_enabled ? 1 : 0
 
-  name        = "lambda_logging"
+  name        = "${var.project_name}-lambda-logging-policy"
   path        = "/"
   description = "IAM policy for logging from a lambda"
 
@@ -118,6 +118,17 @@ resource "aws_iam_policy" "lambda_logging" {
         "logs:PutLogEvents"
       ],
       "Resource": "arn:aws:logs:*:*:*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "${data.aws_s3_bucket.selected.arn}",
+        "${data.aws_s3_bucket.selected.arn}/*"
+      ],
       "Effect": "Allow"
     }
   ]

@@ -11,3 +11,4 @@ ChunkyLauncher.jar
 .terraform
 task.json
 *.zip
+node_modules

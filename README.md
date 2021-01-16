@@ -238,10 +238,14 @@ As usual, once each task completes all the output PNG files will be found in S3.
 
 Once you have scenes uploaded, you can enabled an S3 notification that runs a
 Lambda function capable of automatically running render jobs for that world.
+When a new zip file is uploaded to the `worlds/` directory in the bucket, the
+Lambda function will list the tasks in `tasks/` directory in the bucket and run
+those that have the world name in _their_ name.
 
 For example, if a world zip called `render-test-world.zip` is uploaded to the
-specified S3 bucket, the Lambda function will read all tasks in `tasks/`
-directory in the bucket at run those that have that world set as `world`.
+specified S3 bucket, a task file called
+`chunky-fargate/tasks/render-test-world.json` would be chosen and the scenes in
+it rendered using Fargate tasks.
 
 To enable this feature, set `UPLOAD_TRIGGER_ENABLED` when re-deploying the
 infrastructure:
