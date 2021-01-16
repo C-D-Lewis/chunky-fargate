@@ -32,3 +32,9 @@ variable "container_memory" {
   description = "Container memory units"
   default     = 8192
 }
+
+variable "upload_trigger_enabled" {
+  type        = bool
+  description = "Whether to enable to Lambda task trigger on S3 world zip upload"
+  default     = false
+}

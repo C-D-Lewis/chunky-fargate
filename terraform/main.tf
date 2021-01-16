@@ -1,11 +1,12 @@
 module "main" {
-  source           = "./infrastructure"
-  region           = var.region
-  project_name     = var.project_name
-  vpc_id           = var.vpc_id
-  bucket           = var.bucket
-  container_cpu    = var.container_cpu
-  container_memory = var.container_memory
+  source                 = "./infrastructure"
+  region                 = var.region
+  project_name           = var.project_name
+  vpc_id                 = var.vpc_id
+  bucket                 = var.bucket
+  container_cpu          = var.container_cpu
+  container_memory       = var.container_memory
+  upload_trigger_enabled = var.upload_trigger_enabled
 }
 
 provider "aws" {

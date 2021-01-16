@@ -8,13 +8,13 @@ render on AWS Fargate, with S3 as an input and output store.
 * [Setup](#setup)
 * [Run locally](#run-locally)
 * [Run in Docker](#run-in-docker)
-* [Set up Fargate](#set-up-fargate)
+* [Set up infrastructure](#set-up-infrastructure)
 * [Run a remote render task](#run-a-remote-render-task)
 * [Render scenes in parallel](#render-scenes-in-parallel)
+* [Run a task on zip upload](#run-a-task-on-zip-upload)
 
 ### TODO
 
-- Trigger a task from an S3 world files upload.
 - Notification when a render task completes.
 
 
@@ -94,7 +94,7 @@ docker run \
 ```
 
 
-## Set up Fargate
+## Set up infrastructure
 
 The Docker container can also be used to run a render job remotely on AWS
 Fargate, a serverless compute platform.
@@ -103,7 +103,7 @@ Fargate, a serverless compute platform.
 > create a top-level `chunky-fargate` directory, where all concerned world,
 > scene, and output render files will be located.
 
-Next, set your own pre-existing S3 bucket name in the `terraform/main.tf` file
+First, set your own pre-existing S3 bucket name in the `terraform/main.tf` file
 for your Terraform state files.
 
 Then, create the basic infrastructure resources required (ECR, ECS, IAM, etc.)
@@ -116,7 +116,7 @@ export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
 
 # S3 bucket to use (same as $BUCKET above)
-export TF_VAR_bucket=...
+export BUCKET=...
 
 ./pipeline/deploy-infra.sh
 ```
@@ -232,3 +232,23 @@ Then, launch all scenes as tasks, specifying the JSON file's name. For example:
 ```
 
 As usual, once each task completes all the output PNG files will be found in S3.
+
+
+## Run a task on zip upload
+
+Once you have scenes uploaded, you can enabled an S3 notification that runs a
+Lambda function capable of automatically running render jobs for that world.
+
+For example, if a world zip called `render-test-world.zip` is uploaded to the
+specified S3 bucket, the Lambda function will read all tasks in `tasks/`
+directory in the bucket at run those that have that world set as `world`.
+
+To enable this feature, set `UPLOAD_TRIGGER_ENABLED` when re-deploying the
+infrastructure:
+
+```shell
+# Enable the upload trigger
+export UPLOAD_TRIGGER_ENABLED=true
+
+./pipeline/deploy-infra.sh
+```
