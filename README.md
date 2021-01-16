@@ -236,7 +236,7 @@ As usual, once each task completes all the output PNG files will be found in S3.
 
 ## Run a task on zip upload
 
-Once you have scenes uploaded, you can enabled an S3 notification that runs a
+Once you have scenes uploaded, you can enable an S3 notification that runs a
 Lambda function capable of automatically running render jobs for that world.
 When a new zip file is uploaded to the `worlds/` directory in the bucket, the
 Lambda function will find the first task in `tasks/` directory that has the

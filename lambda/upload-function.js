@@ -1,6 +1,4 @@
 const AWS = require('aws-sdk');
-const ecs = new AWS.ECS();
-const s3 = new AWS.S3();
 
 const {
   AWS_REGION,
@@ -8,6 +6,9 @@ const {
 } = process.env;
 
 AWS.config.update({ region: AWS_REGION || AWS_DEFAULT_REGION });
+
+const ecs = new AWS.ECS();
+const s3 = new AWS.S3();
 
 // Values matching those in pipeline/run-fargate.sh
 const PROJECT_NAME = 'chunky-fargate';
