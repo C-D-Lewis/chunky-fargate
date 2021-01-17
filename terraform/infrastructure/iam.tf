@@ -130,6 +130,18 @@ resource "aws_iam_policy" "lambda_logging" {
         "${data.aws_s3_bucket.selected.arn}/*"
       ],
       "Effect": "Allow"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "ecs:*",
+      "Condition": {
+        "ArnEquals": {
+          "ecs:cluster": "${aws_ecs_cluster.ecs_cluster.arn}"
+        }
+      },
+      "Resource": [
+        "${aws_ecs_task_definition.task_definition.arn}"
+      ]
     }
   ]
 }

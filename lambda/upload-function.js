@@ -33,16 +33,17 @@ const getSecurityGroupAndVpcIds = async () => {
   return { GroupId, VpcId };
 };
 
+/**
+ * Get one subnet ID
+ *
+ * @returns {string} SubnetId
+ */
 const getSubnetId = async () => {
   const res = await ec2.describeSubnets({
     Filters: [{ Name: 'vpc-id', Values: [VpcId] }],
   }).promise();
   return res.Subnets[0].SubnetId;
-}
-
-// # Get subnets (assume all are public)
-// RES=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID")
-// SUBNET_ID=$(echo $RES | jq -r '.Subnets[0].SubnetId')
+};
 
 /**
  * Run a Fargate task for a given scene.
