@@ -9,12 +9,40 @@ AWS.config.update({ region: AWS_REGION || AWS_DEFAULT_REGION });
 
 const ecs = new AWS.ECS();
 const s3 = new AWS.S3();
+const ec2 = new AWS.EC2();
 
 // Values matching those in pipeline/run-fargate.sh
 const PROJECT_NAME = 'chunky-fargate';
 const FAMILY = 'chunky-fargate-td';
 const TASK_DEF_NAME = `${PROJECT_NAME}-container-def`;
 const CLUSTER_NAME = `${PROJECT_NAME}-ecs-cluster`;
+
+let GroupId, VpcId, SubnetId;
+
+/**
+ * Get the IDs of the relevant VPC and Security Group.
+ *
+ * @returns {object} GroupId and VpcId
+ */
+const getSecurityGroupAndVpcIds = async () => {
+  const res = await ec2.describeSecurityGroups({
+    Filters: [{ Name: 'tag:Project', Values: [PROJECT_NAME] }],
+  }).promise();
+  
+  const { GroupId, VpcId } = res.SecurityGroups[0];
+  return { GroupId, VpcId };
+};
+
+const getSubnetId = async () => {
+  const res = await ec2.describeSubnets({
+    Filters: [{ Name: 'vpc-id', Values: [VpcId] }],
+  }).promise();
+  return res.Subnets[0].SubnetId;
+}
+
+// # Get subnets (assume all are public)
+// RES=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID")
+// SUBNET_ID=$(echo $RES | jq -r '.Subnets[0].SubnetId')
 
 /**
  * Run a Fargate task for a given scene.
@@ -25,15 +53,15 @@ const CLUSTER_NAME = `${PROJECT_NAME}-ecs-cluster`;
  * @param {object} scene - Scene from caller. 
  */
 const runFargateForScene = async (world, Bucket, { name, targetSpp }) => {
-  const runTaskRes = await ecs.runTask({
+  const res = await ecs.runTask({
     cluster: CLUSTER_NAME,
     taskDefinition: FAMILY,
     count: 1,
     launchType: 'FARGATE',
     networkConfiguration: {
       awsvpcConfiguration: {
-        subnets: ['$SUBNET_ID'],
-        securityGroups: ['$SECURITY_GROUP_ID'],
+        subnets: [SubnetId],
+        securityGroups: [GroupId],
         assignPublicIp:'ENABLED',
       },
     },
@@ -43,13 +71,14 @@ const runFargateForScene = async (world, Bucket, { name, targetSpp }) => {
        environment: [
           { name: 'WORLD_NAME', value: world },
           { name: 'SCENE_NAME', value: name },
-          { name: 'TARGET_SPP', value: targetSpp },
+          { name: 'TARGET_SPP', value: `${targetSpp}` },
           { name: 'BUCKET', value: Bucket },
         ]
       }]
     },
   }).promise();
-  console.log({ name, targetSpp, runTaskRes });
+  const { taskArn } = res.tasks[0];
+  console.log({ name, targetSpp, taskArn });
 };
 
 /**
@@ -80,7 +109,10 @@ exports.handler = async (event) => {
     const { world, scenes } = JSON.parse(getObjectRes.Body.toString());
     console.log({ world, scenes });
 
+
     // Start the Fargate tasks
+    ({ GroupId, VpcId } = await getSecurityGroupAndVpcIds());
+    SubnetId = await getSubnetId();
     await Promise.all(scenes.map(scene => runFargateForScene(world, Bucket, scene)));
     console.log('Finished');
   } catch (e) {
