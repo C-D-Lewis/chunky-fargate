@@ -109,7 +109,6 @@ exports.handler = async (event) => {
     const { world, scenes } = JSON.parse(getObjectRes.Body.toString());
     console.log({ world, scenes });
 
-
     // Start the Fargate tasks
     ({ GroupId, VpcId } = await getSecurityGroupAndVpcIds());
     SubnetId = await getSubnetId();
