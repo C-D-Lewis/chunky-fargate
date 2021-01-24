@@ -100,27 +100,30 @@ resource "aws_lambda_permission" "allow_bucket" {
   source_arn    = data.aws_s3_bucket.selected.arn
 }
 
-resource "aws_iam_policy" "lambda_logging" {
+resource "aws_iam_policy" "lambda_policy" {
   count = var.upload_trigger_enabled ? 1 : 0
 
-  name        = "${var.project_name}-lambda-logging-policy"
+  name        = "${var.project_name}-lambda-policy"
   path        = "/"
-  description = "IAM policy for logging from a lambda"
+  description = "IAM policy for the bucket upload lambda"
 
   policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Effect": "Allow",
       "Action": [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
-      "Resource": "arn:aws:logs:*:*:*",
-      "Effect": "Allow"
+      "Resource": [
+        "arn:aws:logs:*:*:*"
+      ]
     },
     {
+      "Effect": "Allow",
       "Action": [
         "s3:GetObject",
         "s3:ListBucket"
@@ -128,19 +131,17 @@ resource "aws_iam_policy" "lambda_logging" {
       "Resource": [
         "${data.aws_s3_bucket.selected.arn}",
         "${data.aws_s3_bucket.selected.arn}/*"
-      ],
-      "Effect": "Allow"
+      ]
     },
     {
       "Effect": "Allow",
-      "Action": "ecs:*",
-      "Condition": {
-        "ArnEquals": {
-          "ecs:cluster": "${aws_ecs_cluster.ecs_cluster.arn}"
-        }
-      },
+      "Action": [
+        "ecs:*",
+        "ecr:*",
+        "ec2:*"
+      ],
       "Resource": [
-        "${aws_ecs_task_definition.task_definition.arn}"
+        "*"
       ]
     }
   ]
@@ -152,5 +153,5 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   count = var.upload_trigger_enabled ? 1 : 0
 
   role       = aws_iam_role.upload_function_role[0].name
-  policy_arn = aws_iam_policy.lambda_logging[0].arn
+  policy_arn = aws_iam_policy.lambda_policy[0].arn
 }
