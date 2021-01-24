@@ -137,7 +137,6 @@ resource "aws_iam_policy" "lambda_policy" {
       "Effect": "Allow",
       "Action": [
         "ecs:*",
-        "ecr:*",
         "ec2:*"
       ],
       "Resource": [

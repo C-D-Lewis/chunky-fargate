@@ -9,6 +9,9 @@ const event = {
   }],
 };
 
+/**
+ * The main function.
+ */
 const main = async () => {
   await f.handler(event);
 };

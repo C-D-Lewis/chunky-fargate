@@ -102,9 +102,13 @@ exports.handler = async (event) => {
     const listObjectsParms = { Bucket, Prefix: 'chunky-fargate/tasks/' };
     const { Contents } = await s3.listObjects(listObjectsParms).promise();
     const [taskFile] = Contents.filter(p => p.Key.includes('json') && p.Key.includes(newFileName));
-    console.log({ taskFile: taskFile.Key });
+    if (!taskFile) {
+      console.log(`No task found that includes ${newFileName}, not triggering`);
+      return;
+    }
 
     // Get task file JSON
+    console.log({ taskFile: taskFile.Key });
     const getObjectParams = { Bucket, Key: taskFile.Key };
     const getObjectRes = await s3.getObject(getObjectParams).promise();
     const { world, scenes } = JSON.parse(getObjectRes.Body.toString());
