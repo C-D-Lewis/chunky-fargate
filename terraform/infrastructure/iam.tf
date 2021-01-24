@@ -136,8 +136,9 @@ resource "aws_iam_policy" "lambda_policy" {
     {
       "Effect": "Allow",
       "Action": [
-        "ecs:*",
-        "ec2:*"
+        "ecs:RunTask",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups"
       ],
       "Resource": [
         "*"
