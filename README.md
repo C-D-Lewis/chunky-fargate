@@ -11,7 +11,7 @@ render on AWS Fargate, with S3 as an input and output store.
 * [Set up infrastructure](#set-up-infrastructure)
 * [Run a remote render task](#run-a-remote-render-task)
 * [Render scenes in parallel](#render-scenes-in-parallel)
-* [Run a task on zip upload](#run-a-task-on-zip-upload)
+* [Run a task on world upload](#run-a-task-on-world-upload)
 
 ### TODO
 
