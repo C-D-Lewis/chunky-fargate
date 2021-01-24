@@ -234,17 +234,20 @@ Then, launch all scenes as tasks, specifying the JSON file's name. For example:
 As usual, once each task completes all the output PNG files will be found in S3.
 
 
-## Run a task on zip upload
+## Run a task on world upload
 
 Once you have scenes uploaded, you can enable an S3 notification that runs a
-Lambda function capable of automatically running render jobs for that world.
+Lambda function capable of automatically starting render jobs for that world.
+
 When a new zip file is uploaded to the `worlds/` directory in the bucket, the
 Lambda function will find the first task in `tasks/` directory that has the
 world name in _its_ name.
 
 For example, if a world zip called `render-test-world.zip` is uploaded to the
-specified S3 bucket, the task file called `render-test-world.json` would be
-chosen and the scenes in it rendered using Fargate tasks.
+specified S3 bucket, the task file called `render-test-world-landscapes.json`
+would be chosen and the scenes in it rendered using Fargate tasks. That task
+file must specify the same world name as the zip file uploaded. For example,
+the task shown above in _Render scenes in parallel_.
 
 To enable this feature, set `UPLOAD_TRIGGER_ENABLED` when re-deploying the
 infrastructure:
