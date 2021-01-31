@@ -5,7 +5,9 @@
 Dockerized image + pipeline for the [Chunky](https://chunky.llbit.se/) Minecraft
 render on AWS Fargate, with S3 as an input and output store.
 
-![](assets/architecture.png)
+<p align="center">
+  <img src="assets/architecture.png">
+</p>
 
 * [Setup](#setup)
 * [Run locally](#run-locally)
