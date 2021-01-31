@@ -23,30 +23,24 @@ render on AWS Fargate, with S3 as an input and output store.
 1. Download `ChunkyLauncher.jar` from the
 [Chunky website](https://chunky.llbit.se/).
 
-2. Set up at least one scene in the Chunky GUI, then copy the scene's directory
-   to this project in a local `./scenes` directory
-   (at least the JSON file included).
+2. Set up at least one scene in the Chunky GUI, then locate the JSON file
+   (usually in the user's `.chunky` directory).
 
+3. Install some dependencies (Java + JavaFX, `jq`):
+
+    ```shell
+    sudo apt-get install default-jdk libopenjfx-java libcontrolsfx-java jq
+    ```
 
 ## Run locally
 
-Install some dependencies (Java + JavaFX):
-
-```shell
-sudo apt-get install default-jdk libopenjfx-java libcontrolsfx-java jq
-```
-
-Copy a scene to a local `./scenes` directory, then render the scene to a target
-SPP:
+Render a chosen scene in `./scenes` to a target SPP:
 
 ```shell
 ./pipeline/render-scene.sh $worldDir $sceneName $targetSpp
 ```
 
-> Optionally, restart the render from 0 SPP, and update the world files by
-> adding the `--restart` option.
-
-The output PNG snapshot will be saved by Chunky in the scene directory.
+The output PNG snapshot will be saved by Chunky in the scene's directory.
 
 
 ## Run in Docker
