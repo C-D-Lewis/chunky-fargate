@@ -7,18 +7,18 @@
 #
 # Usage:
 #   1. Copy scene directories to './scenes'
-#   2. Run ./render $worldDir $sceneName $targetSpp
+#   2. Run ./pipeline/render-scene.sh $worldDir $sceneDir $targetSpp
 #
 # Example:
-#   ./render "/mnt/c/Users/Chris/Desktop/village-day-8" "village-iso-45" "300"
+#   ./pipeline/render-scene.sh "/mnt/c/Users/Chris/Desktop/village-day-8" "/mnt/c/Users/Chris/.chunky/scenes/village-iso" "300"
 
 set -eu
 
 MC_VERSION="1.16.4"
-SCENES_DIR="scenes"
+SCENES_DIR="./scenes"
 
 WORLD_DIR=$1
-SCENE_NAME=$2
+ORIGINAL_SCENE_DIR=$2
 TARGET_SPP=$3
 
 # First time setup
@@ -27,12 +27,15 @@ if [[ ! -d "resources" ]]; then
   java -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar -download-mc $MC_VERSION
 fi
 
-# Start from scratch
-rm $SCENES_DIR/$SCENE_NAME/*.dump* | exit 0
-rm $SCENES_DIR/$SCENE_NAME/*.octree* | exit 0
+# Use a copy of the scene JSON file
+rm -rf $SCENES_DIR && mkdir -p $SCENES_DIR
+ORIGINAL_SCENE_NAME=$(ls "$ORIGINAL_SCENE_DIR" | grep -v backup | grep $SCENE_NAME | grep json)
+SCENE_NAME=$(basename $ORIGINAL_SCENE_NAME ".json")
+mkdir "$SCENES_DIR/$SCENE_NAME"
+SCENE_JSON_PATH="$SCENES_DIR/$SCENE_NAME/$SCENE_NAME.json"
+cp "$ORIGINAL_SCENE_DIR/$SCENE_NAME.json" $SCENE_JSON_PATH
 
 # Set appropriate world directory for the platform to allow chunks to load
-SCENE_JSON_PATH="$SCENES_DIR/$SCENE_NAME/$SCENE_NAME.json"
 SCENE_JSON=$(cat $SCENE_JSON_PATH)
 NEW_WORLD_JSON="{ \"world\": { \"path\":\"$WORLD_DIR\", \"dimension\": 0 } }"
 echo "$SCENE_JSON $NEW_WORLD_JSON" | jq -s add > $SCENE_JSON_PATH

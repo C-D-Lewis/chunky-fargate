@@ -34,10 +34,22 @@ render on AWS Fargate, with S3 as an input and output store.
 
 ## Run locally
 
-Render a chosen scene in `./scenes` to a target SPP:
+Render a chosen scene to a target SPP:
+
+> You will see errors about previous render progress not being found. This
+> is expected as each run always starts from scratch.
 
 ```shell
-./pipeline/render-scene.sh $worldDir $sceneName $targetSpp
+./pipeline/render-scene.sh $worldDir $sceneDir $targetSpp
+```
+
+For example:
+
+```
+./pipeline/render-scene.sh \
+  "/mnt/c/Users/Chris/Desktop/village-day-8" \
+  "/mnt/c/Users/Chris/.chunky/scenes/village-iso" \
+  "300"
 ```
 
 The output PNG snapshot will be saved by Chunky in the scene's directory.

@@ -6,6 +6,7 @@ set -eu
 # ./pipeline.sh
 
 WORLD_DIR="$(pwd)/world"
+SCENES_DIR="$(pwd)/scenes"
 
 # Fetch the scene JSON file
 echo "Downloading scene"
@@ -17,7 +18,7 @@ echo "Downloading world"
 
 # Do the render
 RENDER_START=$(date +%s)
-./pipeline/render-scene.sh $WORLD_DIR $SCENE_NAME $TARGET_SPP
+./pipeline/render-scene.sh $WORLD_DIR "." $TARGET_SPP
 RENDER_TIME=$(($(date +%s) - $RENDER_START))
 
 # Upload the output snapshot
@@ -26,3 +27,4 @@ echo "Uploading snapshot"
 
 # In case running locally, clean up temporary world
 rm -rf $WORLD_DIR
+rm -rf $SCENES_DIR
