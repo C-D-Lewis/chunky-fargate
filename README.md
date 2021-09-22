@@ -27,6 +27,8 @@ render on AWS Fargate, with S3 as an input and output store.
 1. Download `ChunkyLauncher.jar` from the
 [Chunky website](https://chunky.llbit.se/).
 
+> You may need to change the update site to `http://chunkyupdate.lemaik.de`.
+
 2. Set up at least one scene in the Chunky GUI, then locate the JSON file
    (usually in the user's `.chunky` directory).
 
