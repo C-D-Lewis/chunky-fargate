@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 WORKDIR /chunky
 
 # Environment variables
-ENV MC_VERSION="1.16.4"
+ENV MC_VERSION="1.17.1"
 
 # For tzdata dependency
 ARG DEBIAN_FRONTEND=noninteractive

@@ -1,20 +1,24 @@
 const AWS = require('aws-sdk');
 
 const {
-  AWS_REGION,
-  AWS_DEFAULT_REGION,
+  /** AWS region */
+  AWS_DEFAULT_REGION = 'us-east-1',
 } = process.env;
 
-AWS.config.update({ region: AWS_REGION || AWS_DEFAULT_REGION });
+AWS.config.update({ region: AWS_DEFAULT_REGION });
 
 const ecs = new AWS.ECS();
 const s3 = new AWS.S3();
 const ec2 = new AWS.EC2();
 
 // Values matching those in pipeline/run-fargate.sh
+/** Project name */
 const PROJECT_NAME = 'chunky-fargate';
+/** Task definition family */
 const FAMILY = 'chunky-fargate-td';
+/** Task definition container name */
 const TASK_DEF_NAME = `${PROJECT_NAME}-container-def`;
+/** ECS cluster name */
 const CLUSTER_NAME = `${PROJECT_NAME}-ecs-cluster`;
 
 let GroupId, VpcId, SubnetId;
@@ -24,7 +28,7 @@ let GroupId, VpcId, SubnetId;
  *
  * @returns {object} GroupId and VpcId
  */
-const getSecurityGroupAndVpcIds = async () => {
+const getSecurityGroupAndVpcId = async () => {
   const res = await ec2.describeSecurityGroups({
     Filters: [{ Name: 'tag:Project', Values: [PROJECT_NAME] }],
   }).promise();
@@ -84,6 +88,7 @@ const runFargateForScene = async (world, Bucket, { name, targetSpp }) => {
 
 /**
  * Main Lambda event handler.
+ * Runs a task for each scene in the identified task file when a new world zip or task JSON is uploaded.
  * 
  * @param {object} event - S3 notification event.
  */
@@ -94,13 +99,12 @@ exports.handler = async (event) => {
   } = event.Records[0].s3;
   console.log({ Bucket, key });
 
-  // Get uploaded file name
+  // Get uploaded file or task name
   const [newFileName] = (key.split('/').pop()).split('.');
 
   try {
-    // Read all tasks and select the relevant one to render
-    const listObjectsParms = { Bucket, Prefix: 'chunky-fargate/tasks/' };
-    const { Contents } = await s3.listObjects(listObjectsParms).promise();
+    // Read all tasks and select the first relevant one based on world name
+    const { Contents } = await s3.listObjects({ Bucket, Prefix: 'chunky-fargate/tasks/' }).promise();
     const [taskFile] = Contents.filter(p => p.Key.includes('json') && p.Key.includes(newFileName));
     if (!taskFile) {
       console.log(`No task found that includes ${newFileName}, not triggering`);
@@ -109,13 +113,12 @@ exports.handler = async (event) => {
 
     // Get task file JSON
     console.log({ taskFile: taskFile.Key });
-    const getObjectParams = { Bucket, Key: taskFile.Key };
-    const getObjectRes = await s3.getObject(getObjectParams).promise();
-    const { world, scenes } = JSON.parse(getObjectRes.Body.toString());
+    const { Body } = await s3.getObject({ Bucket, Key: taskFile.Key }).promise();
+    const { world, scenes } = JSON.parse(Body.toString());
     console.log({ world, scenes });
 
     // Start the Fargate tasks
-    ({ GroupId, VpcId } = await getSecurityGroupAndVpcIds());
+    ({ GroupId, VpcId } = await getSecurityGroupAndVpcId());
     SubnetId = await getSubnetId();
     await Promise.all(scenes.map(scene => runFargateForScene(world, Bucket, scene)));
     console.log('Finished');

@@ -14,7 +14,7 @@
 
 set -eu
 
-MC_VERSION="1.16.4"
+MC_VERSION="1.17.1"
 SCENES_DIR="./scenes"
 
 WORLD_DIR=$1
@@ -29,7 +29,7 @@ fi
 
 # Use a copy of the scene JSON file
 rm -rf $SCENES_DIR && mkdir -p $SCENES_DIR
-ORIGINAL_SCENE_NAME=$(ls "$ORIGINAL_SCENE_DIR" | grep -v backup | grep json)
+ORIGINAL_SCENE_NAME=$(ls "$ORIGINAL_SCENE_DIR" | grep -v backup | grep -v chunky | grep json)
 SCENE_NAME=$(basename $ORIGINAL_SCENE_NAME ".json")
 mkdir "$SCENES_DIR/$SCENE_NAME"
 SCENE_JSON_PATH="$SCENES_DIR/$SCENE_NAME/$SCENE_NAME.json"
