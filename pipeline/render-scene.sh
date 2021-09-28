@@ -35,10 +35,18 @@ mkdir "$SCENES_DIR/$SCENE_NAME"
 SCENE_JSON_PATH="$SCENES_DIR/$SCENE_NAME/$SCENE_NAME.json"
 cp "$ORIGINAL_SCENE_DIR/$SCENE_NAME.json" $SCENE_JSON_PATH
 
-# Set appropriate world directory for the platform to allow chunks to load
 SCENE_JSON=$(cat $SCENE_JSON_PATH)
-NEW_WORLD_JSON="{ \"world\": { \"path\":\"$WORLD_DIR\", \"dimension\": 0 } }"
-echo "$SCENE_JSON $NEW_WORLD_JSON" | jq -s add > $SCENE_JSON_PATH
+# Set appropriate world directory for the platform to allow chunks to load
+# Empty actors array to prevent NullPointerException in 2.4.0
+NEW_SCENE_JSON="{
+  \"world\": {
+    \"path\":\"$WORLD_DIR\",
+    \"dimension\": 0
+  },
+  \"actors\": []
+}"
+echo "$SCENE_JSON $NEW_SCENE_JSON" | jq -s add > $SCENE_JSON_PATH
+
 
 # Run Chunky
 java \
