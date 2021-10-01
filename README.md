@@ -9,13 +9,15 @@ render on AWS Fargate, with S3 as an input and output store.
   <img src="assets/architecture.png">
 </p>
 
-* [Setup](#setup)
-* [Run locally](#run-locally)
-* [Run in Docker](#run-in-docker)
-* [Set up infrastructure](#set-up-infrastructure)
-* [Run a remote render task](#run-a-remote-render-task)
-* [Render scenes in parallel](#render-scenes-in-parallel)
-* [Run a task on world upload](#run-a-task-on-world-upload)
+- [chunky-fargate](#chunky-fargate)
+    - [TODO](#todo)
+  - [Setup](#setup)
+  - [Run locally](#run-locally)
+  - [Run in Docker](#run-in-docker)
+  - [Set up infrastructure](#set-up-infrastructure)
+  - [Run a remote render task](#run-a-remote-render-task)
+  - [Render scenes in parallel](#render-scenes-in-parallel)
+  - [Run a task on upload](#run-a-task-on-upload)
 
 ### TODO
 
@@ -217,7 +219,6 @@ following format example:
 
 ```json
 {
-  "bucket": "public-files.chrislewis.me.uk",
   "world": "render-test-world",
   "scenes": [
     {
@@ -234,29 +235,30 @@ Place the JSON file in a `tasks` directory in the S3 bucket:
 s3://$BUCKET/
   - chunky-fargate/
     - tasks/
-      - render-test.json
+      - render-test-world-tasks.json
 ```
 
 Then, launch all scenes as tasks, specifying the JSON file's name. For example:
 
 ```shell
-./pipeline/run-task-file.sh render-test.json
+./pipeline/run-task-file.sh render-test-world-tasks.json
 ```
 
 As usual, once each task completes all the output PNG files will be found in S3.
 
 
-## Run a task on world upload
+## Run a task on upload
 
 Once you have scenes uploaded, you can enable an S3 notification that runs a
 Lambda function capable of automatically starting render jobs for that world.
 
 When a new zip file is uploaded to the `worlds/` directory in the bucket, the
 Lambda function will find the first task in `tasks/` directory that has the
-world name in _its_ name.
+world name in _its_ name. Adding a new task to the `tasks/` directory will also
+trigger.
 
 For example, if a world zip called `render-test-world.zip` is uploaded to the
-specified S3 bucket, the task file called `render-test-world-landscapes.json`
+specified S3 bucket, the task file called `render-test-world-tasks.json`
 would be chosen and the scenes in it rendered using Fargate tasks. That task
 file must specify the same world name as the zip file uploaded. For example,
 the task shown above in _Render scenes in parallel_.

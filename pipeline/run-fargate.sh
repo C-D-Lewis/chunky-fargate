@@ -1,8 +1,12 @@
 #!/bin/bash
 
+# Project name
 PROJECT_NAME="chunky-fargate"
+# Task definition family name
 FAMILY="chunky-fargate-td"
+# Container task definition name
 TASK_DEF_NAME="$PROJECT_NAME-container-def"
+# ECS cluster name
 CLUSTER_NAME="$PROJECT_NAME-ecs-cluster"
 
 # If no params, ask for them
@@ -20,6 +24,8 @@ else
   TARGET_SPP=$4
 fi
 
+set -eu
+
 echo "Fetching required resources..."
 
 # Get security group
@@ -34,7 +40,7 @@ VPC_ID=$(echo $RES | jq -r '.Vpcs[0].VpcId')
 RES=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID")
 SUBNET_ID=$(echo $RES | jq -r '.Subnets[0].SubnetId')
 
-# Create a task
+# Create a Fargate task
 echo "Creating task..."
 RES=$(aws ecs run-task \
   --cluster $CLUSTER_NAME \

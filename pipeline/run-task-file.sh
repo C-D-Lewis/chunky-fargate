@@ -2,8 +2,10 @@
 
 set -eu
 
+# Directory for tasks within the bucket
 BUCKET_TASKS_DIR="chunky-fargate/tasks"
 
+# Task file name
 TASK_FILE=$1
 
 # Fetch task file
@@ -33,7 +35,7 @@ if [[ "$SCENES_LENGTH" < "1" ]]; then
   exit 1
 fi
 
-# Check each and launch Fargate
+# Check each scene to render and launch Fargate
 jq -c -r '.[]' <<< "$SCENES" | while read SCENE_JSON; do
   SCENE_NAME=$(echo $SCENE_JSON | jq -r '.name')
   TARGET_SPP=$(echo $SCENE_JSON | jq -r '.targetSpp')

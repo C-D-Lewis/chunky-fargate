@@ -20,7 +20,6 @@ EOF
 
 resource "aws_iam_role" "ecs_task_role" {
   name        = "${var.project_name}-task-role"
-  description = "Allow putting output file in the bucket"
 
   assume_role_policy = <<EOF
 {
@@ -50,9 +49,7 @@ resource "aws_iam_role_policy" "ecs_task_role_policy" {
     {
       "Effect": "Allow",
       "Action": [
-        "s3:GetObject",
-        "s3:PutObject",
-        "s3:ListBucket"
+        "s3:*"
       ],
       "Resource": [
         "arn:aws:s3:::${var.bucket}/*",

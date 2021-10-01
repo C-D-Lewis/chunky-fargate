@@ -3,6 +3,7 @@
 
 set -eu
 
+# Location within the bucket
 BUCKET_SCENES_DIR="chunky-fargate/scenes"
 
 # Download scene JSON file from S3 - permissions are in the environment

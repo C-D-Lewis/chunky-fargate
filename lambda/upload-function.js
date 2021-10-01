@@ -93,14 +93,13 @@ const runFargateForScene = async (world, Bucket, { name, targetSpp }) => {
  * @param {object} event - S3 notification event.
  */
 exports.handler = async (event) => {
+  // Get uploaded file or task name
   const { 
     object: { key },
     bucket: { name: Bucket },
   } = event.Records[0].s3;
-  console.log({ Bucket, key });
-
-  // Get uploaded file or task name
   const [newFileName] = (key.split('/').pop()).split('.');
+  console.log({ Bucket, key, newFileName });
 
   try {
     // Read all tasks and select the first relevant one based on world name
