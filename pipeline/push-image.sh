@@ -11,6 +11,9 @@ IMAGE="$PROJECT_NAME:latest"
 # AWS region
 AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
 
+# Build new image
+docker build -t $IMAGE .
+
 # Login to ECR
 PWD=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --region=${AWS_DEFAULT_REGION} --query='Account' --output=text)

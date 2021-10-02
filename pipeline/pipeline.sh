@@ -2,7 +2,7 @@
 
 set -eu
 
-# env: WORLD_NAME, SCENE_NAME, TARGET_SPP, BUCKET, [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY|AWS_PROFILE], AWS_DEFAULT_REGION
+# env: WORLD_NAME, SCENE_NAME, TARGET_SPP, BUCKET, [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY|AWS_PROFILE|IAM], AWS_DEFAULT_REGION
 # ./pipeline.sh
 
 WORLD_DIR="$(pwd)/world"
@@ -18,13 +18,15 @@ echo "Downloading world"
 
 # Do the render, tail logs
 RENDER_START=$(date +%s)
-tail -F log.txt &
-./pipeline/render-scene.sh $WORLD_DIR "." $TARGET_SPP > log.txt
+./pipeline/render-scene.sh $WORLD_DIR "." $TARGET_SPP
 RENDER_TIME=$(($(date +%s) - $RENDER_START))
 
 # Upload the output snapshot
 echo "Uploading snapshot"
 ./pipeline/upload-snapshot.sh $RENDER_TIME
+
+# Move completed tasks
+./pipeline/move-completed-tasks.sh
 
 # In case running locally, clean up temporary world
 rm -rf $WORLD_DIR

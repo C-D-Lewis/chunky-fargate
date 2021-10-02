@@ -2,6 +2,12 @@ data "aws_s3_bucket" "selected" {
   bucket = var.bucket
 }
 
+resource "aws_s3_bucket_object" "tasks_placeholder" {
+  bucket  = data.aws_s3_bucket.selected.id
+  key     = "chunky-fargate/tasks/drop-tasks-here"
+  content = "Will trigger a Fargate task if world name is included in task file name."
+}
+
 resource "aws_s3_bucket_notification" "bucket_notification" {
   count = var.upload_trigger_enabled ? 1 : 0
 
