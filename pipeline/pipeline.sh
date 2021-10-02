@@ -16,9 +16,10 @@ echo "Downloading scene"
 echo "Downloading world"
 ./pipeline/fetch-world.sh
 
-# Do the render
+# Do the render, tail logs
 RENDER_START=$(date +%s)
-./pipeline/render-scene.sh $WORLD_DIR "." $TARGET_SPP
+tail -F log.txt &
+./pipeline/render-scene.sh $WORLD_DIR "." $TARGET_SPP > log.txt
 RENDER_TIME=$(($(date +%s) - $RENDER_START))
 
 # Upload the output snapshot
