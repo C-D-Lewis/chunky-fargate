@@ -3,7 +3,8 @@
 ![](assets/sample.png)
 
 Dockerized image + pipeline for the [Chunky](https://chunky.llbit.se/) Minecraft
-render on AWS Fargate, with S3 as an input and output store.
+renderer on AWS Fargate, with S3 as an input and output store. Also includes S3
+world and task triggering and email completion notifications.
 
 <p align="center">
   <img src="assets/architecture.png">
