@@ -49,11 +49,13 @@ resource "aws_iam_role_policy" "ecs_task_role_policy" {
     {
       "Effect": "Allow",
       "Action": [
-        "s3:*"
+        "s3:*",
+        "SNS:*"
       ],
       "Resource": [
         "arn:aws:s3:::${var.bucket}/*",
-        "arn:aws:s3:::${var.bucket}"
+        "arn:aws:s3:::${var.bucket}",
+        "arn:aws:sns:us-east-1:617929423658:*"
       ]
     }
   ]

@@ -2,6 +2,7 @@
 
 set -eu
 
+echo ""
 echo "Using bucket $BUCKET"
 export TF_VAR_bucket=$BUCKET
 
