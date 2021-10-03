@@ -277,7 +277,7 @@ export EMAIL_NOTIFICATIONS_ENABLED=true
 ```
 
 Once updated, go to the [AWS SNS Console](https://console.aws.amazon.com/sns),
-open the topic and create an email subscription with your chosen email adderess.
+open the topic and create an email subscription with your chosen email address.
 
 You will need to confirm the subscription with the email sent by SNS before
 notifications will be delivered.
