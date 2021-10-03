@@ -28,6 +28,9 @@ echo "Uploading snapshot"
 # Move completed tasks
 ./pipeline/move-completed-tasks.sh
 
+# Notify SNS topic for email notifications
+./pipeline/notify-sns.sh
+
 # In case running locally, clean up temporary world
 rm -rf $WORLD_DIR
 rm -rf $SCENES_DIR

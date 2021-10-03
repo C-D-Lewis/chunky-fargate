@@ -11,3 +11,5 @@ variable "container_cpu" {}
 variable "container_memory" {}
 
 variable "upload_trigger_enabled" {}
+
+variable "email_notifications_enabled" {}

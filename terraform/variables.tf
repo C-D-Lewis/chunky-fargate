@@ -38,3 +38,9 @@ variable "upload_trigger_enabled" {
   description = "Whether to enable to Lambda task trigger on S3 world zip upload"
   default     = false
 }
+
+variable "email_notifications_enabled" {
+  type        = bool
+  description = "Whether to enable to SNS topic for email notifications"
+  default     = false
+}

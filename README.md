@@ -9,19 +9,14 @@ render on AWS Fargate, with S3 as an input and output store.
   <img src="assets/architecture.png">
 </p>
 
-- [chunky-fargate](#chunky-fargate)
-    - [TODO](#todo)
-  - [Setup](#setup)
-  - [Run locally](#run-locally)
-  - [Run in Docker](#run-in-docker)
-  - [Set up infrastructure](#set-up-infrastructure)
-  - [Run a remote render task](#run-a-remote-render-task)
-  - [Render scenes in parallel](#render-scenes-in-parallel)
-  - [Run a task on upload](#run-a-task-on-upload)
-
-### TODO
-
-- Notification when a render task completes.
+- [Setup](#setup)
+- [Run locally](#run-locally)
+- [Run in Docker](#run-in-docker)
+- [Set up infrastructure](#set-up-infrastructure)
+- [Run a remote render task](#run-a-remote-render-task)
+- [Render scenes in parallel](#render-scenes-in-parallel)
+- [Run a task on upload](#run-a-task-on-upload)
+- [Get email notifications](#get-email-notifications)
 
 
 ## Setup
@@ -266,3 +261,22 @@ export UPLOAD_TRIGGER_ENABLED=true
 
 ./scripts/update-infra.sh
 ```
+
+
+## Get email notifications
+
+You can enable an SNS topic to get notified when a render is complete. Simply
+set `EMAIL_NOTIFICATIONS_ENABLED` when re-deploying the infrastructure:
+
+```shell
+# Enable the SNS topic trigger
+export EMAIL_NOTIFICATIONS_ENABLED=true
+
+./scripts/update-infra.sh
+```
+
+Once updated, go to the [AWS SNS Console](https://console.aws.amazon.com/sns),
+open the topic and create an email subscription with your chosen email adderess.
+
+You will need to confirm the subscription with the email sent by SNS before
+notifications will be delivered.
