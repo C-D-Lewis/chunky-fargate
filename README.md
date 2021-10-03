@@ -132,22 +132,16 @@ export AWS_SECRET_ACCESS_KEY=...
 # S3 bucket to use (same as $BUCKET above)
 export BUCKET=...
 
-./pipeline/deploy-infra.sh
+./scripts/update-infra.sh
 ```
 
-Build the Docker image:
-
-```shell
-docker build -t chunky-fargate .
-```
-
-Push the most recently built image to ECR:
+Build the Docker image and deploy to ECS:
 
 > The first push with the dependency layer will take a while, but subsequent
 > updates to the image should not.
 
 ```shell
-./pipeline/push-image.sh
+./scripts/update-image.sh
 ```
 
 If you haven't already, add a statement to the Bucket Policy of the output
@@ -181,7 +175,7 @@ Run a Fargate task to perform the render of the chosen world and scene:
 
 ```shell
 # Create the Fargate task
-./pipeline/run-fargate.sh
+./scripts/run-fargate.sh
 ```
 
 You will be asked for the following which may change for each render task:
@@ -194,7 +188,7 @@ You will be asked for the following which may change for each render task:
 For example:
 
 ```
-$ ./pipeline/run-fargate.sh
+$ ./scripts/run-fargate.sh
 
 World name: render-test-world
 Scene name: render-test-scene
@@ -270,5 +264,5 @@ infrastructure:
 # Enable the upload trigger
 export UPLOAD_TRIGGER_ENABLED=true
 
-./pipeline/deploy-infra.sh
+./scripts/update-infra.sh
 ```

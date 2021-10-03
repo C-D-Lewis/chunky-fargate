@@ -25,4 +25,4 @@ RUN java -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar -download-mc $MC_VERSION
 # Pipeline
 COPY pipeline /chunky/pipeline
 
-ENTRYPOINT ["./pipeline/pipeline.sh"]
+ENTRYPOINT ["./pipeline/run-all.sh"]

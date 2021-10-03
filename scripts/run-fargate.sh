@@ -8,6 +8,8 @@ FAMILY="chunky-fargate-td"
 TASK_DEF_NAME="$PROJECT_NAME-container-def"
 # ECS cluster name
 CLUSTER_NAME="$PROJECT_NAME-ecs-cluster"
+# AWS region
+export AWS_DEFAULT_REGION=us-east-1
 
 # If no params, ask for them
 if [ $# -eq 0 ]; then

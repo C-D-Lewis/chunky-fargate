@@ -51,7 +51,7 @@ jq -c -r '.[]' <<< "$SCENES" | while read SCENE_JSON; do
 
   # Launch a task
   echo "Launching $SCENE_NAME in $WORLD @ $TARGET_SPP SPP"
-  ./pipeline/run-fargate.sh $BUCKET $WORLD $SCENE_NAME $TARGET_SPP
+  ./scripts/run-fargate.sh $BUCKET $WORLD $SCENE_NAME $TARGET_SPP
 done
 
 # Cleanup
