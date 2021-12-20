@@ -14,7 +14,7 @@
 set -eu
 
 # Minecraft version
-MC_VERSION="1.17.1"
+MC_VERSION="1.18.1"
 # Local scenes directory
 SCENES_DIR="./scenes"
 
