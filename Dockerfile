@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 # Chunky files
-COPY ChunkyLauncher.jar /chunky/ChunkyLauncher.jar
+ADD ChunkyLauncher.jar /chunky/ChunkyLauncher.jar
 
 # Initialize Chunky and Minecraft textures
 RUN cd /chunky

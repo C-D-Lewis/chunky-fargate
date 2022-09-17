@@ -9,7 +9,7 @@ resource "aws_lambda_function" "upload_function" {
   function_name    = local.lambda_function_name
   role             = aws_iam_role.upload_function_role[0].arn
   handler          = "upload-function.handler"
-  runtime          = "nodejs12.x"
+  runtime          = "nodejs16.x"
   timeout          = 30
   source_code_hash = filebase64sha256("../upload-function.zip")
 }
