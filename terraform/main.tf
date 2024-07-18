@@ -25,7 +25,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "chrislewis.me.uk-tfstate"
+    bucket = "chrislewis-tfstate"
     key    = "chunky-fargate"
     region = "us-east-1"
   }

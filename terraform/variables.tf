@@ -19,6 +19,7 @@ variable "vpc_id" {
 variable "bucket" {
   type        = string
   description = "S3 bucket to read worlds and scenes from, and save renders to"
+  default     = "public-files.chrislewis.me.uk"
 }
 
 variable "container_cpu" {
