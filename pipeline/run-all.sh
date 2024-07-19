@@ -26,7 +26,7 @@ echo "Uploading snapshot"
 ./pipeline/upload-snapshot.sh $RENDER_TIME
 
 # Move completed tasks
-./pipeline/move-completed-tasks.sh
+# ./pipeline/move-completed-tasks.sh
 
 # Notify SNS topic for email notifications
 ./pipeline/notify-sns.sh

@@ -4,7 +4,7 @@
 set -eu
 
 # Current date-time
-DATE=$(date +'%Y-%m-%d')
+DATE=$(date +'%Y')
 # Local scenes directory
 SCENES_DIR="scenes"
 # Path to the snapshots
