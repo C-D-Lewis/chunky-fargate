@@ -65,3 +65,6 @@ java \
   -f \
   -target $TARGET_SPP \
   -render $SCENE_NAME
+
+echo "PNG output to $SCENES_DIR/$SCENE_NAME/snapshots"
+ls "$SCENES_DIR/$SCENE_NAME/snapshots"
