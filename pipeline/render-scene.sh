@@ -57,7 +57,7 @@ NEW_SCENE_JSON="{
 echo "$SCENE_JSON $NEW_SCENE_JSON" | jq -s add > $SCENE_JSON_PATH
 
 # Run Chunky
-/usr/bin/java \
+$(which java) \
   --module-path "/usr/share/maven-repo/org/openjfx/javafx-controls/11/:/usr/share/maven-repo/org/openjfx/javafx-base/11/:/usr/share/maven-repo/org/openjfx/javafx-graphics/11/:/usr/share/maven-repo/org/openjfx/javafx-fxml/11/" \
   --add-modules=javafx.controls,javafx.base,javafx.graphics,javafx.fxml \
   -Dchunky.home="$(pwd)" \
