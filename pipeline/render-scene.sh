@@ -25,10 +25,13 @@ SCENE_DIR=$2
 # Target samples
 TARGET_SPP=$3
 
+# Java version
+$JAVA=$(which java)
+
 # First time setup of resources
 if [[ ! -d "resources" ]]; then
-  java -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar --update
-  java -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar -download-mc $MC_VERSION
+  $JAVA -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar --update
+  $JAVA -Dchunky.home="$(pwd)" -jar ChunkyLauncher.jar -download-mc $MC_VERSION
 fi
 
 # Reset local scene directory
@@ -57,7 +60,7 @@ NEW_SCENE_JSON="{
 echo "$SCENE_JSON $NEW_SCENE_JSON" | jq -s add > $SCENE_JSON_PATH
 
 # Run Chunky
-$(which java) \
+$JAVA \
   --module-path "/usr/share/maven-repo/org/openjfx/javafx-controls/11/:/usr/share/maven-repo/org/openjfx/javafx-base/11/:/usr/share/maven-repo/org/openjfx/javafx-graphics/11/:/usr/share/maven-repo/org/openjfx/javafx-fxml/11/" \
   --add-modules=javafx.controls,javafx.base,javafx.graphics,javafx.fxml \
   -Dchunky.home="$(pwd)" \
