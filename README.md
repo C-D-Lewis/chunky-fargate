@@ -56,7 +56,10 @@ For example:
   "300"
 ```
 
-The output PNG snapshot will be saved by Chunky in the scene's directory.
+The output PNG snapshot will be saved by Chunky in the scene's directory and in
+the `output` directory created, since the `scenes` directory is always reset.
+
+> If "no world found for scene" occurs, try with `sudo`.
 
 
 ## Run in Docker

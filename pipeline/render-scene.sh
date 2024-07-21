@@ -57,7 +57,7 @@ NEW_SCENE_JSON="{
 echo "$SCENE_JSON $NEW_SCENE_JSON" | jq -s add > $SCENE_JSON_PATH
 
 # Run Chunky
-java \
+/usr/bin/java \
   --module-path "/usr/share/maven-repo/org/openjfx/javafx-controls/11/:/usr/share/maven-repo/org/openjfx/javafx-base/11/:/usr/share/maven-repo/org/openjfx/javafx-graphics/11/:/usr/share/maven-repo/org/openjfx/javafx-fxml/11/" \
   --add-modules=javafx.controls,javafx.base,javafx.graphics,javafx.fxml \
   -Dchunky.home="$(pwd)" \
@@ -66,5 +66,7 @@ java \
   -target $TARGET_SPP \
   -render $SCENE_NAME
 
-echo "PNG output to $SCENES_DIR/$SCENE_NAME/snapshots"
-ls "$SCENES_DIR/$SCENE_NAME/snapshots"
+# Preserve renders
+mkdir -p ./output
+mv "$SCENES_DIR/$SCENE_NAME/snapshots/*" ./output/
+
