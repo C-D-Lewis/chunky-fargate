@@ -7,7 +7,6 @@ versions
 chunky.json
 chunky-launcher.json
 world
-ChunkyLauncher.jar
 .terraform
 task.json
 *.zip
