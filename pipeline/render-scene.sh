@@ -26,7 +26,7 @@ SCENE_DIR=$2
 TARGET_SPP=$3
 
 # Java version
-$JAVA=$(which java)
+JAVA=$(which java)
 
 # First time setup of resources
 if [[ ! -d "resources" ]]; then
