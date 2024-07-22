@@ -221,11 +221,11 @@ following format example:
 
 ```json
 {
-  "world": "render-test-world",
+  "world": "hom-mc-server-latest",
   "scenes": [
     {
-      "name": "render-test-scene",
-      "targetSpp": 150
+      "name": "coral-overview",
+      "targetSpp": 100
     }
   ]
 }
