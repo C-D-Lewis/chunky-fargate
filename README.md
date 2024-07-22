@@ -67,7 +67,7 @@ Add to `crontab`. Example:
 
 ```
 # 4AM Mondays
-0 4 * * 1 cd /mnt/nvme/chunky-fargate && ./pipeline/render-scene.sh /mnt/nvme/hom-mc-server/world/
+0 4 * * 1 cd /mnt/nvme/chunky-fargate && ./pipeline/render-scene.sh /mnt/nvme/hom-mc-server/world/ /mnt/nvme/hom-mc-server/rendering/scenes/coral-overview/ 100
 ```
 
 
