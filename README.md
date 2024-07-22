@@ -61,6 +61,15 @@ the `output` directory created, since the `scenes` directory is always reset.
 
 > If "no world found for scene" occurs, try with `sudo`.
 
+### Run on a local schedule
+
+Add to `crontab`. Example:
+
+```
+# 4AM Mondays
+0 4 * * 1 cd /mnt/nvme/chunky-fargate && ./pipeline/render-scene.sh /mnt/nvme/hom-mc-server/world/
+```
+
 
 ## Run in Docker
 

@@ -14,7 +14,7 @@
 set -eu
 
 # Minecraft version
-MC_VERSION="1.18.1"
+MC_VERSION="1.20.4"
 # Local scenes directory
 SCENES_DIR="./scenes"
 
@@ -70,6 +70,7 @@ $JAVA \
   -render $SCENE_NAME
 
 # Preserve renders
-mkdir -p ./output
-mv "$SCENES_DIR/$SCENE_NAME/snapshots/*" ./output/
-
+mkdir -p ./snapshots
+OUTPUT_FILE="$SCENE_NAME-$TARGET_SPP"
+NOW=$(date +'%Y-%m-%d')
+cp -r "$SCENES_DIR/$SCENE_NAME/snapshots/$OUTPUT_FILE.png" "./snapshots/$OUTPUT_FILE-$NOW.png"

@@ -11,4 +11,4 @@ world
 task.json
 *.zip
 node_modules
-./output
+snapshots
