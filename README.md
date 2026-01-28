@@ -67,7 +67,7 @@ Add to `crontab`. Example:
 
 ```
 # 4AM Mondays
-0 4 * * 1 cd /mnt/nvme/chunky-fargate && ./pipeline/render-scene.sh /mnt/nvme/hom-mc-server/world/ /mnt/nvme/hom-mc-server/rendering/scenes/coral-overview/ 100
+0 4 * * 1 cd /mnt/ssd/chunky-fargate && ./pipeline/render-scene.sh /mnt/ssd/hom-mc-server/world/ /mnt/ssd/hom-mc-server/rendering/scenes/coral-overview/ 100
 ```
 
 
@@ -137,8 +137,12 @@ export AWS_DEFAULT_REGION=us-east-1
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
 
-# S3 bucket to use (same as $BUCKET above)
+# S3 bucket to use (without s3:// protocol)
 export BUCKET=...
+# Whether to notify with email when complete
+export EMAIL_NOTIFICATIONS_ENABLED=...
+# Whether to trigger on new world/ or tasks/ file upload (see above)
+export UPLOAD_TRIGGER_ENABLED=...
 
 ./scripts/update-infra.sh
 ```

@@ -28,6 +28,6 @@ TARGET="$ECR_URI:latest"  # Only want one image in the repo
 docker tag $IMAGE $TARGET
 
 # Push image to ECR
-echo "Pushing to ECR: $TARGET"
+echo ">>> Pushing to ECR: $TARGET"
 docker push $TARGET
-echo "Push complete"
+echo ">>> Push complete"

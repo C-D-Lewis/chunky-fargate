@@ -18,20 +18,20 @@ BUCKET=$(cat $TASK_FILE | jq -r '.bucket')
 WORLD=$(cat $TASK_FILE | jq -r '.world')
 SCENES=$(cat $TASK_FILE | jq -r '.scenes')
 if [[ "$BUCKET" == "null" ]]; then
-  echo "Task is missing .bucket"
+  echo ">>> Task is missing .bucket"
   exit 1
 fi
 if [[ "$WORLD" == "null" ]]; then
-  echo "Task is missing .world"
+  echo ">>> Task is missing .world"
   exit 1
 fi
 if [[ "$SCENES" == "null" ]]; then
-  echo "Task is missing .scenes"
+  echo ">>> Task is missing .scenes"
   exit 1
 fi
 SCENES_LENGTH=$(echo $SCENES | jq -r  length)
 if [[ "$SCENES_LENGTH" < "1" ]]; then
-  echo "At least one scene needed in .scenes"
+  echo ">>> At least one scene needed in .scenes"
   exit 1
 fi
 
@@ -41,16 +41,16 @@ jq -c -r '.[]' <<< "$SCENES" | while read SCENE_JSON; do
   TARGET_SPP=$(echo $SCENE_JSON | jq -r '.targetSpp')
 
   if [[ "$SCENE_NAME" == "null" ]]; then
-    echo "Scene is missing .name"
+    echo ">>> Scene is missing .name"
     exit 1
   fi
   if [[ "$TARGET_SPP" == "null" ]]; then
-    echo "Scene is missing .targetSpp"
+    echo ">>> Scene is missing .targetSpp"
     exit 1
   fi
 
   # Launch a task
-  echo "Launching $SCENE_NAME in $WORLD @ $TARGET_SPP SPP"
+  echo ">>> Launching $SCENE_NAME in $WORLD @ $TARGET_SPP SPP"
   ./scripts/run-fargate.sh $BUCKET $WORLD $SCENE_NAME $TARGET_SPP
 done
 

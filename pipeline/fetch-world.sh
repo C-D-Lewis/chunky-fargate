@@ -16,7 +16,7 @@ aws s3 cp \
   "./$WORLD_NAME.zip"
 
 # Unzip actual files to local world directory
-echo "Unzipping..."
+echo ">>> Unzipping..."
 unzip -q ./*.zip -d $WORLD_DIR
 mv $WORLD_DIR/**/* $WORLD_DIR/
 

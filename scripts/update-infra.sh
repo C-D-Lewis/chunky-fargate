@@ -3,13 +3,13 @@
 set -eu
 
 echo ""
-echo "Using bucket $BUCKET"
+echo ">>> Using bucket $BUCKET"
 export TF_VAR_bucket=$BUCKET
 
-echo "Upload trigger enabled? $UPLOAD_TRIGGER_ENABLED"
+echo ">>> Upload trigger enabled? $UPLOAD_TRIGGER_ENABLED"
 export TF_VAR_upload_trigger_enabled=$UPLOAD_TRIGGER_ENABLED
 
-echo "Email notifications enabled? $EMAIL_NOTIFICATIONS_ENABLED"
+echo ">>> Email notifications enabled? $EMAIL_NOTIFICATIONS_ENABLED"
 export TF_VAR_email_notifications_enabled=$EMAIL_NOTIFICATIONS_ENABLED
 
 echo ""

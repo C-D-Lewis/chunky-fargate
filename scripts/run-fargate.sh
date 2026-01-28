@@ -28,7 +28,7 @@ fi
 
 set -eu
 
-echo "Fetching required resources..."
+echo ">>> Fetching required resources..."
 
 # Get security group
 RES=$(aws ec2 describe-security-groups --filters "Name=tag:Project,Values=$PROJECT_NAME")
@@ -43,7 +43,7 @@ RES=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID")
 SUBNET_ID=$(echo $RES | jq -r '.Subnets[0].SubnetId')
 
 # Create a Fargate task
-echo "Creating task..."
+echo ">>> Creating task..."
 RES=$(aws ecs run-task \
   --cluster $CLUSTER_NAME \
   --task-definition $FAMILY \
@@ -70,5 +70,5 @@ RES=$(aws ecs run-task \
 )
 
 TASK_ID=$(echo $RES | jq -r '.tasks[0].taskArn')
-echo "Started: $TASK_ID"
+echo ">>> Started: $TASK_ID"
 echo ""
