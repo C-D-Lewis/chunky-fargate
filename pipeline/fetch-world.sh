@@ -2,13 +2,8 @@
 
 set -eu
 
-# World location in this context
-WORLD_DIR="$(pwd)/world"
 # Worlds location in the bucket
 BUCKET_DIR_NAME="chunky-fargate/worlds"
-
-# Make local world directory
-mkdir -p $WORLD_DIR
 
 # Download world zip file from S3
 aws s3 cp \
@@ -17,8 +12,10 @@ aws s3 cp \
 
 # Unzip actual files to local world directory
 echo ">>> Unzipping..."
-unzip -q ./*.zip -d $WORLD_DIR
-mv $WORLD_DIR/**/* $WORLD_DIR/
+unzip -q "./$WORLD_NAME.zip" -d ./temp
+rm -rf ./world
+
+mv ./temp/world .
 
 # Cleanup downloaded zip
-rm -rf ./*.zip
+rm -rf ./*.zip ./temp
